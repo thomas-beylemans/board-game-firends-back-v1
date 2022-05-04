@@ -1,4 +1,5 @@
 const dataMapper = require('../database/dataMapper');
+const { createToken } = require('../security/jwtManagement.js');
 
 const mainController = {
     home(req, res, next){
@@ -10,8 +11,12 @@ const mainController = {
     },
     async register(req, res, next){
         try {
+            console.log(req.body);
             const result = await dataMapper.addOneUser(req.body);
-            res.status(200).json(result);
+            
+            const accessToken = createToken(req.body);
+
+            res.status(200).json({result, accessToken});
         } catch (e) {
             next(e);
         }

@@ -41,14 +41,13 @@ const dataMapper = {
 
     async addOneUser(userToAdd) {
         console.log(userToAdd)
-        // const hashedPassword = await bcrypt.hash(userToAdd.password, 10);
-        const notHashedPassword = userToAdd.password;
+        const hashedPassword = await bcrypt.hash(userToAdd.user.password, 10);
         const query = {
             text: `INSERT INTO "user" (
                 "email", "password", "username", "bio", "geo_id"
                 )
                 VALUES ($1, $2, $3, $4, $5)
-                RETURNING "id"`,
+                RETURNING "id", "email", "username", "bio", "geo_id"`,
             values: [
                 userToAdd.user.email,
                 hashedPassword,
@@ -58,7 +57,7 @@ const dataMapper = {
             ]
         };
         const results = await pool.query(query);
-        return results.rows[0] || null;
+        return results.rows[0];
     }
 }
 
