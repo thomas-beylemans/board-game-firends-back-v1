@@ -1,0 +1,49 @@
+@protocol=http://
+@host=localhost
+@port=:46655
+@prefix=/api/v1
+@baseUrl={{protocol}}{{host}}{{port}}{{prefix}}
+@variant=marseille
+
+###
+GET {{baseUrl}}/ HTTP/1.1
+
+###
+GET {{baseUrl}}/profile/8 HTTP/1.1
+
+###
+POST {{baseUrl}}/register HTTP/1.1
+content-type: application/json
+
+{
+    "geo": {
+        "city": "Toulon",
+        "state_number": "83000",
+        "lat": "43.1363587",
+        "long": "5.89842"
+    },    
+    "user": {
+        "email": "maire@brest.com",
+        "password": "98EHqzdq8+",
+        "username": "lemaire de brest",
+        "bio": "Je suis le maire de la ville de brest"
+    }
+}
+
+### https://geo.api.gouv.fr/communes?nom=Toulon&boost=population&fields=code,nom,centre
+
+
+
+###
+GET {{baseUrl}}/dashboard HTTP/1.1
+
+###
+POST {{baseUrl}}/signIn HTTP/1.1
+content-type: application/json
+
+{    
+    "user": {
+        "email": "maire@paris.com",
+        "password": "98EHqzdq8+"
+    }
+}

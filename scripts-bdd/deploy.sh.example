@@ -1,0 +1,17 @@
+export PGUSER=<user>
+export PGPASSWORD=<password>
+export PGDATABASE=<database>
+
+
+sqitch init bgf --uri https://github.com/O-clock-Atome/projet-6-trouvez-des-joueurs-back --engine pg
+
+sqitch add version_1 -n "database structure creation"
+sqitch add version_2 -n "adding data"
+
+
+# je revert
+sqitch revert db:pg:<database>
+# je deploy
+sqitch deploy db:pg:<database>
+# je verify
+sqitch verify db:pg:<database>

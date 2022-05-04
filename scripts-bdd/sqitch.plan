@@ -1,0 +1,6 @@
+%syntax-version=1.0.0
+%project=bgf
+%uri=https://github.com/O-clock-Atome/projet-6-trouvez-des-joueurs-back
+
+version_1 2022-05-04T09:56:47Z Thomas BEYLEMANS <thomas@thomas-fedora> # database structure creation for signin-signup
+version_2 2022-05-04T11:27:45Z Thomas BEYLEMANS <thomas@thomas-fedora> # adding data
