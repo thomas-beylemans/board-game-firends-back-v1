@@ -11,10 +11,10 @@ const mainController = {
     },
     async register(req, res, next){
         try {
-            console.log(req.body);
+            // console.log(req.body);
             const result = await dataMapper.addOneUser(req.body);
             
-            const accessToken = createToken(req.body);
+            const accessToken = createToken(req.body.user);
 
             res.status(200).json({result, accessToken});
         } catch (e) {
@@ -23,8 +23,19 @@ const mainController = {
     },
     async signIn(req, res, next){
         try {
-            const result = await dataMapper.checkUserRegistration(req.body);
-            res.status(200).json(result);
+            const result = await dataMapper.checkUserRegistration(req.body.user);
+            
+            if(result.isAuthorized === false) {
+                return res.status(401).json({ message: 'Wrong email / password' });
+            }
+            
+            // delete isAuthorized from result to avoid sending it to the client
+            delete result.isAuthorized;
+
+            const accessToken = createToken(req.body.user);
+            //?
+            res.status(200).json({result, accessToken});
+            //?
         } catch (e) {
             next(e);
         }

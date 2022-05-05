@@ -5,7 +5,7 @@ const securityMiddleware = {
         // trying to catch the token from the headers
         const authHeader = req.headers['authorization'];
         const token = authHeader && authHeader.split(' ')[1];
-        
+
         // if the token is not found in the headers
         if (!token) {
             return res.status(401).json({
@@ -18,6 +18,7 @@ const securityMiddleware = {
             if (err) {
                 return res.status(401).json({ message: 'Unauthorized request' });
             }
+            console.log(user);
             req.user = user;
             next();
         });

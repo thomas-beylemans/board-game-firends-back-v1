@@ -17,18 +17,26 @@ const dataMapper = {
         return result.rows[0] || null;
     },
     async checkUserRegistration(userData) {
-        //test hash mot de passe
-        // const hashedPassword = await bcrypt.hash(userData.password, 10);
-        // const isCorrectPwd = await bcrypt.compare(req.body.password, user.password);
-
-        // console.log(hashedPassword);
-        const query = {
-            text: `SELECT * FROM "user" WHERE "email" = $1 AND "password" = $2`,
-            // values: [userData.email, hashedPassword]
-            values: [userData.user.email, userData.user.password]
+        
+        // check pwd
+        let query = {
+            text: `SELECT * FROM "user" WHERE "email" = $1`,
+            values: [userData.email]
         };
-        const result = await pool.query(query);
-        return result.rowCount;
+        const userReference = await pool.query(query);
+        const passwordReference = userReference.rows[0].password;
+
+        const isCorrectPwd = await bcrypt.compare(userData.password, passwordReference);
+        if (!isCorrectPwd) {
+            userReference.rows[0].isAuthorized = false;
+        } else {
+            userReference.rows[0].isAuthorized = true;
+        }
+        
+        // delete password from userReference result
+        delete userReference.rows[0].password;
+
+        return userReference.rows[0];
     },
 
             // // CASE all valid

@@ -3,7 +3,6 @@
 @port=:46655
 @prefix=/api/v1
 @baseUrl={{protocol}}{{host}}{{port}}{{prefix}}
-@variant=marseille
 
 ###
 GET {{baseUrl}}/ HTTP/1.1
@@ -43,7 +42,21 @@ content-type: application/json
 
 {    
     "user": {
-        "email": "maire@paris.com",
-        "password": "98EHqzdq8+"
+        "email": "maire@brest.com",
+        "password": "$2b$10$aDACx8QaPJfmuxMWmWHrvu/37vke1/N2H8m.kDGxNVaG6CeMnB5Eu+"
     }
 }
+
+###
+POST {{baseUrl}}/sign-in HTTP/1.1
+content-type: application/json
+
+{    
+    "user": {
+        "email": "tom@oclock.com",
+        "password": "toto"
+    }
+}
+
+
+http://localhost:46655/api/v1

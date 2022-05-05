@@ -4,9 +4,9 @@ const jwtManagement = {
     createToken: (user) => {
         const payload = {
             user: {
-                id: user.user.id,
-                email: user.user.email,
-                username: user.user.username
+                id: user.id,
+                email: user.email,
+                username: user.username
             }
         }
         const options = {
