@@ -28,5 +28,8 @@
   },
   "devDependencies": {
     "node-dev": "^7.4.3"
+  },
+  "engines": {
+    "node": "16.x"
   }
 }
