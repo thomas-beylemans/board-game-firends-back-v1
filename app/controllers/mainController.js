@@ -1,5 +1,6 @@
 const dataMapper = require('../database/dataMapper');
-const { createToken } = require('../security/jwtManagement.js');
+const { createAccessToken } = require('../security/jwtManagement.js');
+const { createRefreshToken } = require('../security/jwtManagement.js');
 
 const mainController = {
     home(req, res, next){
@@ -11,19 +12,24 @@ const mainController = {
     },
     async register(req, res, next){
         try {
-            // console.log(req.body);
             const result = await dataMapper.addOneUser(req.body);
             
-            const accessToken = createToken(req.body.user);
+            const accessToken = createAccessToken(result);
+            // const refreshToken = createRefreshToken(result);
 
-            res.status(200).json({result, accessToken});
+            // TODO: précicer le contenu de la réponse à apporter au front
+            res.status(200).json({
+                username: result.username,
+                accessToken
+            });
+            // res.status(200).json({username: result.username, accessToken, refreshToken});
         } catch (e) {
             next(e);
         }
     },
     async signIn(req, res, next){
         try {
-            const result = await dataMapper.checkUserRegistration(req.body.user);
+            const result = await dataMapper.checkUserRegistration(req.body);
             
             if(result.isAuthorized === false) {
                 return res.status(401).json({ message: 'Wrong email / password' });
@@ -32,9 +38,11 @@ const mainController = {
             // delete isAuthorized from result to avoid sending it to the client
             delete result.isAuthorized;
 
-            const accessToken = createToken(req.body.user);
+            const accessToken = createAccessToken(req.body);
+            // const refreshToken = createRefreshToken(req.body);
             //?
-            res.status(200).json({result, accessToken});
+            res.status(200).json({username: result.username, accessToken});
+            // res.status(200).json({username: result.username, accessToken, refreshToken});
             //?
         } catch (e) {
             next(e);
@@ -44,7 +52,6 @@ const mainController = {
         try {
             const userId = Number(req.params.userId);
             const result = await dataMapper.getOneUser(userId);
-            console.log(result);
             res.status(200).json(result);
         } catch (e) {
             next(e);

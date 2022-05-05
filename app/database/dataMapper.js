@@ -38,18 +38,8 @@ const dataMapper = {
 
         return userReference.rows[0];
     },
-
-            // // CASE all valid
-            // if (errors.length === 0) {
-            //     const userData = req.body;
-            //     userData.password = await bcrypt.hash(req.body.password, 10);
-            //     await User.create(userData);
-            //     return res.redirect('/');
-            // }
-
     async addOneUser(userToAdd) {
-        console.log(userToAdd)
-        const hashedPassword = await bcrypt.hash(userToAdd.user.password, 10);
+        const hashedPassword = await bcrypt.hash(userToAdd.password, 10);
         const query = {
             text: `INSERT INTO "user" (
                 "email", "password", "username", "bio", "geo_id"
@@ -57,10 +47,10 @@ const dataMapper = {
                 VALUES ($1, $2, $3, $4, $5)
                 RETURNING "id", "email", "username", "bio", "geo_id"`,
             values: [
-                userToAdd.user.email,
+                userToAdd.email,
                 hashedPassword,
-                userToAdd.user.username,
-                userToAdd.user.bio,
+                userToAdd.username,
+                userToAdd.bio,
                 1
             ]
         };
