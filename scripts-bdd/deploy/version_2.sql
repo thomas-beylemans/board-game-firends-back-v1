@@ -13,7 +13,7 @@ INSERT INTO public.user(
     VALUES
     ('tom@oclock.com', 'toto', 'Tom', 'dev junior', 1),
     ('tommy@oclock.com', 'toto', 'Tommy', 'dev junior', 1),
-    ('tommas@oclock.com', 'toto', 'Tommas', 'dev junior', 1),
+    ('tommas@oclock.com', 'toto', 'Tommas', 'dev junior', 2),
     ('toas@oclock.com', 'toto', 'Toas', 'dev junior', 1);
 
 
