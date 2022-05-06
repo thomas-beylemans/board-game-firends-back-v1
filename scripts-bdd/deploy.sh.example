@@ -1,17 +1,27 @@
+# # pour config locale
 export PGUSER=<user>
 export PGPASSWORD=<password>
 export PGDATABASE=<database>
 
+sqitch revert db:pg:bgf
+sqitch deploy db:pg:bgf
+sqitch verify db:pg:bgf
 
-sqitch init bgf --uri https://github.com/O-clock-Atome/projet-6-trouvez-des-joueurs-back --engine pg
+# # pour config Heroku
+# export PGUSER=<user>
+# export PGPASSWORD=<password>
+# export PGDATABASE=<database>
+# export PGHOST=<host>
 
-sqitch add version_1 -n "database structure creation"
-sqitch add version_2 -n "adding data"
+# sqitch revert db:pg:dej8m0sd8ab9ml
+# sqitch deploy db:pg:dej8m0sd8ab9ml
+# sqitch verify db:pg:dej8m0sd8ab9ml
 
 
-# je revert
-sqitch revert db:pg:<database>
-# je deploy
-sqitch deploy db:pg:<database>
-# je verify
-sqitch verify db:pg:<database>
+##############################################################################
+# historic
+
+# sqitch init bgf --uri https://github.com/O-clock-Atome/projet-6-trouvez-des-joueurs-back --engine pg
+
+# sqitch add version_1 -n "database structure creation for signin-signup"
+# sqitch add version_2 -n "adding data"

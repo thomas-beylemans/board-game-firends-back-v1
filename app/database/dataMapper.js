@@ -3,40 +3,46 @@ const bcrypt = require("bcrypt"); // module pour crypter les mdp
 
 
 const dataMapper = {
-    /**
-     * Récupère toutes les user rangées par défaut par name
-     * @returns {Promise<Array>} La liste des promos
-     */
-     async getOneUser(userId) {
+    async getOneUser(userId) {
         const query = {
             text: `SELECT * FROM "user" WHERE id = $1`,
             values: [userId]
         };
-
         const result = await pool.query(query);
-        return result.rows[0] || null;
+        
+        if (result.rowCount == 0) {
+            return {
+                // TODO: use the error handler
+                rowCount: 0,
+                message: "User not found"
+            };
+        }
+        return result.rows[0];
     },
     async checkUserRegistration(userData) {
-        
-        // check pwd
-        let query = {
+        // trying to find the user in the database with his email
+        const query = {
             text: `SELECT * FROM "user" WHERE "email" = $1`,
             values: [userData.email]
         };
-        const userReference = await pool.query(query);
-        const passwordReference = userReference.rows[0].password;
-
-        const isCorrectPwd = await bcrypt.compare(userData.password, passwordReference);
-        if (!isCorrectPwd) {
-            userReference.rows[0].isAuthorized = false;
-        } else {
-            userReference.rows[0].isAuthorized = true;
+        const userFound = await pool.query(query);
+        
+        // if user doesn't exists, return without authorization
+        if (userFound.rowCount == 0) {
+            return {
+                // TODO: use the error handler
+                isAuthorized: false,
+                message: "Email not found"
+            };
         }
         
-        // delete password from userReference result
-        delete userReference.rows[0].password;
+        const passwordReference = userFound.rows[0].password;
+        userFound.rows[0].isAuthorized = await bcrypt.compare(userData.password, passwordReference);
+        
+        // delete password from userFound result
+        delete userFound.rows[0].password;
 
-        return userReference.rows[0];
+        return userFound.rows[0];
     },
     async addOneUser(userToAdd) {
         const hashedPassword = await bcrypt.hash(userToAdd.password, 10);
