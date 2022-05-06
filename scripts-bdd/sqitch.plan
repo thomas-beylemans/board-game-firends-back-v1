@@ -4,3 +4,5 @@
 
 version_1 2022-05-04T09:56:47Z Thomas BEYLEMANS <thomas@thomas-fedora> # database structure creation for signin-signup
 version_2 2022-05-04T11:27:45Z Thomas BEYLEMANS <thomas@thomas-fedora> # adding data
+version_3 2022-05-06T08:44:49Z System Administrator <root@MacBook-Pro-16.local> # set event, game database
+version_4 2022-05-06T08:44:49Z System Administrator <root@MacBook-Pro-16.local> # add event, game data

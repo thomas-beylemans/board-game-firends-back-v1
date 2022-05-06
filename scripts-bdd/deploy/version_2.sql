@@ -5,7 +5,7 @@ BEGIN;
 INSERT INTO public.geo(
     "city", "state_number", "lat", "long" )
     VALUES
-    ('Paris', '75000', 48.8589, 2.347),
+    ('Paris', 75000, 48.8589, 2.347),
     ('Montpellier', 34000, 43.61, 3.8742);
 
 INSERT INTO public.user(
