@@ -3,19 +3,19 @@ const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
 const profileController = require('../controllers/profileController');
-const { checkAccessToken, checkRefreshToken } = require('../middlewares/securityMiddleware');
-
-router.get('/', (req, res) => { res.send('Hello World') });
+const { checkAccessToken } = require('../middlewares/securityMiddleware');
 
 /**
  * @route POST /api/v1
  */
+router.get('/', (req, res) => { res.send('Hello World') });
+
 router.post('/register', userController.register);
 router.post('/sign-in', userController.signIn);
 
 // TODO: add a sign out route
 
-// router.get('/dashboard', checkAccessToken, profileController.getDashboard);
+router.get('/dashboard', checkAccessToken, profileController.getDashboard);
 // router.patch('/profile', checkAccessToken, profileController.updateProfile);
 // router.delete('/profile', checkAccessToken, profileController.deleteProfile);
 

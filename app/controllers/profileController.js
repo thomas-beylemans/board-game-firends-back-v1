@@ -15,6 +15,12 @@ const profileController = {
         } catch (e) {
             next(e);
         }
+    },
+    async getDashboard(req, res, next){
+        // catch the id of the user inside the token
+        const userId = Number(req.userToken.user.id);
+        const result = await dataMapper.getDashboard(userId);
+        res.status(200).json({ data: result, accessToken: req.bearerToken });
     }
 }
 

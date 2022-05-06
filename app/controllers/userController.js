@@ -7,9 +7,11 @@ const userController = {
             const result = await dataMapper.addOneUser(req.body);
             
             const accessToken = createAccessToken(result);
-
+            
+            // push the accessToken in req in case of next middleware
+            req.userToken = accessToken;
             // TODO: précicer le contenu de la réponse à apporter au front
-            res.status(200).json({
+            res.status(201).json({
                 username: result.username,
                 accessToken
             });

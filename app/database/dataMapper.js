@@ -62,6 +62,27 @@ const dataMapper = {
         };
         const results = await pool.query(query);
         return results.rows[0];
+    },
+    async getDashboard(userId) {
+        const query = {
+            text: `SELECT 
+                "user"."username" AS "Pseudo",
+                "user"."avatar" AS "Avatar",
+                "geo"."city" AS "Ville",
+                "user"."bio" AS "Biographie"
+            FROM
+                "user" INNER JOIN "geo" ON ("geo"."id" = "geo_id")
+            WHERE
+                "user"."id" = $1`,
+            values: [userId]
+        };
+        const result = await pool.query(query);
+        if (result.rowCount == 0) {
+            return {
+                message: "User not found"
+            };
+        }
+        return result.rows[0];
     }
 }
 
