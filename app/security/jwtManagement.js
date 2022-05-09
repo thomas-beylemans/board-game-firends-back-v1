@@ -1,7 +1,8 @@
 const jwt = require('jsonwebtoken');
 
 const jwtManagement = {
-    createAccessToken: (user) => {
+    createAccessToken: async (user) => {
+        console.log(`On crée un token d'accès`);
         console.log(user);
         const payload = {
             user: {
@@ -13,7 +14,7 @@ const jwtManagement = {
         const options = {
             expiresIn: '96h'
         }
-        return jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, options);
+        return (await jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, options));
     }
 }
 
