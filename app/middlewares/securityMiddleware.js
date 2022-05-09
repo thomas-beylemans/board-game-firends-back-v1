@@ -8,7 +8,7 @@ const securityMiddleware = {
         
         // bearer token ready to be sent for the next one
         req.bearerToken = token;
-
+        console.log(req.bearerToken);
         // if the token is not found in the headers
         if (!token) {
             return res.status(401).json({
