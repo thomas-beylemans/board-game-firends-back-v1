@@ -60,9 +60,7 @@ const dataMapper = {
                 1
             ]
         };
-        // console.log('on essait de mettre en bdd')
         const results = await pool.query(query);
-        // console.log(results)
         return results.rows[0];
     },
     async getDashboard(userId) {

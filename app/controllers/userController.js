@@ -6,13 +6,12 @@ const userController = {
         try {
             const result = await dataMapper.addOneUser(req.body);
             
-            const accessToken = createAccessToken(result);
+            const accessToken = await createAccessToken(result);
             
             // push the accessToken in req in case of next middleware
             req.userToken = accessToken;
             // TODO: précicer le contenu de la réponse à apporter au front
             res.status(201).json({
-                username: result.username,
                 accessToken
             });
         } catch (error) {
@@ -30,9 +29,9 @@ const userController = {
             // delete isAuthorized from result to avoid sending it to the client
             delete result.isAuthorized;
             
-            const accessToken = createAccessToken(req.body);
+            const accessToken = await createAccessToken(result);
             //?
-            res.status(200).json({username: result.username, accessToken});
+            res.status(200).json({ accessToken });
             //?
         } catch (error) {
             res.status(401).json({ errorMessage: error });
