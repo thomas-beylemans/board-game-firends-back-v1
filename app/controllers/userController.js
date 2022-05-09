@@ -19,7 +19,8 @@ const userController = {
                 accessToken
             });
         } catch (error) {
-            res.status(401).json({ errorMessage: error.detail });
+            res.status(401).json(error);
+            // res.status(401).json({ errorMessage: error.detail });
         }
     },
     async signIn(req, res, next){
@@ -42,7 +43,8 @@ const userController = {
             res.status(200).json({username: result.username, accessToken});
             //?
         } catch (error) {
-            res.status(401).json({ errorMessage: error });
+            res.status(401).json(error);
+            // res.status(401).json({ errorMessage: error });
         }
     }
 }
