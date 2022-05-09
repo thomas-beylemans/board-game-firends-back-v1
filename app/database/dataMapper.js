@@ -51,7 +51,7 @@ const dataMapper = {
                 "email", "password", "username", "bio", "geo_id"
                 )
                 VALUES ($1, $2, $3, $4, $5)
-                RETURNING "id", "email", "username", "bio", "geo_id"`,
+                RETURNING "id", "email", "username", "geo_id"`,
             values: [
                 userToAdd.email,
                 hashedPassword,

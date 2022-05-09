@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 
 const jwtManagement = {
     createAccessToken: (user) => {
+        console.log(user);
         const payload = {
             user: {
                 id: user.id,
