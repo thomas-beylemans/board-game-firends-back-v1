@@ -15,8 +15,8 @@ const userController = {
                 username: result.username,
                 accessToken
             });
-        } catch (e) {
-            next(e);
+        } catch (error) {
+            res.status(401).json({ errorMessage: error.detail });
         }
     },
     async signIn(req, res, next){
@@ -24,18 +24,18 @@ const userController = {
             const result = await dataMapper.checkUserRegistration(req.body);
             
             if(result.isAuthorized === false) {
-                return res.status(401).json({ message: 'Wrong email / password' });
+                throw `Erreur de saisie de l'email ou du mot de passe !`;
             }
             
             // delete isAuthorized from result to avoid sending it to the client
             delete result.isAuthorized;
-
+            
             const accessToken = createAccessToken(req.body);
             //?
             res.status(200).json({username: result.username, accessToken});
             //?
-        } catch (e) {
-            next(e);
+        } catch (error) {
+            res.status(401).json({ errorMessage: error });
         }
     }
 }

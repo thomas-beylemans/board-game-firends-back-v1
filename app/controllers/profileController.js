@@ -7,13 +7,11 @@ const profileController = {
             const userId = Number(req.params.profileId);
             const result = await dataMapper.getOneUser(userId);
             if (result.rowCount == 0) {
-                return res.status(404).json({
-                    message: "User not found"
-                });
+                throw `L'utilisateur n'existe pas !`;
             }
             res.status(200).json(result);
-        } catch (e) {
-            next(e);
+        } catch (error) {
+            res.status(404).json({ errorMessage: error });
         }
     },
     async getDashboard(req, res, next){

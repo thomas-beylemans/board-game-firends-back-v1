@@ -12,14 +12,14 @@ const securityMiddleware = {
         // if the token is not found in the headers
         if (!token) {
             return res.status(401).json({
-                error: 'Unauthorized request - no token provided'
+                errorMessage: 'Accès interdit, il faut être indentifié !'
             });
         }
         
         // trying to decode it
         jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
             if (err) {
-                return res.status(401).json({ message: 'Unauthorized request' });
+                return res.status(401).json({ errorMessage: 'Accès interdit, il faut être indentifié !' });
             }
             req.userToken = user;
             next();

@@ -14,7 +14,7 @@ const dataMapper = {
             return {
                 // TODO: use the error handler
                 rowCount: 0,
-                message: "User not found"
+                errorMessage: "User not found"
             };
         }
         return result.rows[0];
@@ -32,7 +32,7 @@ const dataMapper = {
             return {
                 // TODO: use the error handler
                 isAuthorized: false,
-                message: "Email not found"
+                errorMessage: "Email not found"
             };
         }
         
@@ -60,7 +60,9 @@ const dataMapper = {
                 1
             ]
         };
+        // console.log('on essait de mettre en bdd')
         const results = await pool.query(query);
+        // console.log(results)
         return results.rows[0];
     },
     async getDashboard(userId) {
@@ -79,7 +81,7 @@ const dataMapper = {
         const result = await pool.query(query);
         if (result.rowCount == 0) {
             return {
-                message: "User not found"
+                errorMessage: `L'utilisateur n'a pas été trouvé...`
             };
         }
         return result.rows[0];
