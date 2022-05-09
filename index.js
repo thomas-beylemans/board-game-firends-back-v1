@@ -9,8 +9,8 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // to read the body of the request
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+app.use(express.urlencoded({ extended: true, limit: '50mb', parameterLimit: 1000000 }));
+app.use(express.json({ limit: '50mb', parameterLimit: 1000000 }));
 
 app.use(cors({
     origin: '*',

@@ -3,12 +3,32 @@ const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
 const profileController = require('../controllers/profileController');
+const dashboardController = require('../controllers/dashboardController');
 const { checkAccessToken } = require('../middlewares/securityMiddleware');
+const multer  = require('multer')
+const storage = multer.diskStorage(
+    {
+        destination: './uploads/',
+        filename: function ( req, file, cb ) {
+            cb( null, file.originalname );
+        }
+    }
+);
+const upload = multer({
+    // dest: './app',
+    // // originalname: true,
+    // filename: true,
+    // preservePath: true,
+    storage: storage
+})
 
 /**
  * @route POST /api/v1
  */
-router.get('/', (req, res) => { res.send('Hello World') });
+router.get('/', (req, res) => {
+    res.send('Hello World');
+    require('../middlewares/importPicture');
+});
 
 router.post('/register', userController.register);
 router.post('/sign-in', userController.signIn);
@@ -16,6 +36,7 @@ router.post('/sign-in', userController.signIn);
 // TODO: add a sign out route
 
 router.get('/dashboard', checkAccessToken, profileController.getDashboard);
+router.post('/dashboard', upload.single('picture'), dashboardController.uploadPicture);
 // router.patch('/profile', checkAccessToken, profileController.updateProfile);
 // router.delete('/profile', checkAccessToken, profileController.deleteProfile);
 
