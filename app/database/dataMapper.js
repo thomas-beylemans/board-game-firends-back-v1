@@ -158,6 +158,48 @@ const dataMapper = {
         };
         console.log(responseToReturn);
         return responseToReturn;
+    },
+
+    async updateProfile(userId, userData){
+        userData.user.password = await bcrypt.hash(userData.user.password, 10);
+        let fields = Object.keys(userData.user).map((key, index) => {
+            // console.log(typeof userData.user[key]);
+            if ( typeof userData.user[key] !== 'object') {
+                return `"${key}" = $${index + 1}`
+            }
+        });
+        
+        fields = fields.filter(element => {
+            return element !== undefined;
+        });
+
+        
+
+        let values = Object.values(userData.user).map((value, index) => {
+            // console.log(typeof value);
+            if ( typeof value !== 'object') {
+                return value;
+            }
+        });
+        values = values.filter(element => {
+            return element !== undefined;
+        });
+
+        console.log(fields);
+        // console.log(fields.length + 1);
+        console.log(values);
+        
+        const query = {
+            text:`UPDATE "user"
+                SET ${fields}
+                WHERE id = $${fields.length + 1}
+                RETURNING *`,
+            values: [...values, userId]
+        }
+        
+        const results = await pool.query(query);
+        console.log(results.rows[0]);
+        
     }
 }
 

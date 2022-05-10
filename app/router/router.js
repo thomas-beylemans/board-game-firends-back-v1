@@ -16,7 +16,7 @@ router.post('/sign-in', userController.signIn);
 // TODO: add a sign out route
 
 router.get('/dashboard', checkAccessToken, profileController.getDashboard);
-// router.patch('/profile', checkAccessToken, profileController.updateProfile);
+router.patch('/profile', checkAccessToken, profileController.updateProfile);
 // router.delete('/profile', checkAccessToken, profileController.deleteProfile);
 
 // router.get('/profile/my-games', checkAccessToken, profileController.getMyGames);

@@ -19,6 +19,12 @@ const profileController = {
         const userId = Number(req.userToken.user.id);
         const result = await dataMapper.getDashboard(userId);
         res.status(200).json({ user: result, accessToken: req.bearerToken });
+    },
+    async updateProfile(req, res, next){
+        // catch the id of the user inside the token
+        const userId = Number(req.userToken.user.id);
+        const result = await dataMapper.updateProfile(userId, req.body);
+        res.status(200).json({ user: result, accessToken: req.bearerToken });
     }
 }
 
