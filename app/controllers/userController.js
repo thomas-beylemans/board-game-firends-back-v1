@@ -15,7 +15,7 @@ const userController = {
                 accessToken
             });
         } catch (error) {
-            res.status(401).json({ errorMessage: error.detail });
+            res.status(401).json({ errorMessage: error.detail});
         }
     },
     async signIn(req, res, next){
