@@ -4,9 +4,9 @@
 BEGIN;
 
 INSERT INTO public.event(
-    "name", "seats", "timestamp", "description", "admin", "geo_id" ) 
+    "name", "seats", "start_date", "description", "event_admin", "geo_id" ) 
     VALUES
-    ('BoardGameEvent Bordeaux', 100, '2022-05-06 11:59:52.675661+02', 'Biggest event in France', '1', 1);
+    ('BoardGameEvent Bordeaux', 100, '2022-06-06 11:59:52.675661+02', 'Biggest event in France', '1', 1);
 
 INSERT INTO public.game(
     "name"  )

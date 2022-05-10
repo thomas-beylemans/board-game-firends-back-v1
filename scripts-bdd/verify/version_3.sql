@@ -3,7 +3,7 @@
 BEGIN;
 
 
-SELECT "id", "name", "seats", "timestamp", "description", "admin", "geo_id", "created_at", "updated_at"
+SELECT "id", "name", "seats", "start_date", "description", "event_admin", "geo_id", "created_at", "updated_at"
 -- , "chatroom_id"
 FROM "event";
 

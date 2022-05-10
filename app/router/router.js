@@ -35,6 +35,5 @@ router.get('/profile/:profileId', checkAccessToken, profileController.getProfile
 // router.post('/events/:id/subscribe', checkAccessToken, eventController.subscribeToEventById);
 // router.delete('/events/:id/subscribe', checkAccessToken, eventController.unsubscribeToEventById);
 
-// router.get('/profile/:userId', checkAccessToken, mainController.getOneUser);
 
 module.exports = router;
