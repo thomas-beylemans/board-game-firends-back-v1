@@ -1,5 +1,6 @@
 const pool = require('./dbClient');
 const bcrypt = require("bcrypt"); // module pour crypter les mdp
+const res = require('express/lib/response');
 
 
 const dataMapper = {
@@ -246,6 +247,72 @@ const dataMapper = {
         const results = await pool.query(query);
         console.log(results.rows[0]);
         
+    },
+    async getEvents(){
+        const results = {
+            "rows": {
+                "event": [
+                    {
+                        "id": 1,
+                        "name": "Event 1",
+                        "seats": 10,
+                        "description": "Je ne joue pas pour participer, je joue pour que vous sachiez que je suis le meilleur !",
+                        "start_date": "2022-05-04T18:00:00.000Z",
+                        "event_admin": {
+                            "id": 1,
+                            "username": "Chat numéro 1",
+                            "avatar": "https://cdn.pixabay.com/photo/2016/06/14/00/14/cat-1455468_960_720.jpg"
+                        },
+                        "geo": {
+                            "id": 17,
+                            "city": "Lattes",
+                            "postcode": 34970,
+                            "lat": 43.567,
+                            "long": 3.899
+                        }
+                    },
+                    {
+                        "id": 27,
+                        "name": "Event 27",
+                        "seats": 7,
+                        "description": "Super soirée où ça sera fun mais on ne sait pas quoi faire pour l'instant...",
+                        "start_date": "2022-05-25T18:00:00.000Z",
+                        "event_admin": {
+                            "id": 1,
+                            "username": "Chat numéro 2",
+                            "avatar": "https://cdn.pixabay.com/photo/2012/02/27/16/57/cat-17430_960_720.jpg"
+                        },
+                        "geo": {
+                            "id": 21,
+                            "city": "Villeneuve-lès-Maguelone",
+                            "postcode": 34750,
+                            "lat": 43.5119,
+                            "long": 3.8589
+                        }
+                    },
+                    {
+                        "id": 589,
+                        "name": "Event trop trop cool",
+                        "seats": 7,
+                        "description": "Une aprèm entière à faire des solitaires entre amis, ça te dit ?!",
+                        "start_date": "2022-05-27T18:00:00.000Z",
+                        "event_admin": {
+                            "id": 4,
+                            "username": "GriffeurDu34",
+                            "avatar": "https://cdn.pixabay.com/photo/2015/01/04/10/46/lion-588144_960_720.jpg"
+                        },
+                        "geo": {
+                            "id": 3971,
+                            "city": "Palavas-les-Flots",
+                            "postcode": 34250,
+                            "lat": 43.5323,
+                            "long": 3.9346
+                        }
+                    }
+                ]
+            }
+        }
+        return results.rows;
     }
 }
 
