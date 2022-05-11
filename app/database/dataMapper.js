@@ -163,7 +163,7 @@ const dataMapper = {
         const resultUser = await pool.query(queryUser);
         const resultEvent = await pool.query(queryEvent);
         const resultGame = await pool.query(queryGame);
-        
+
         if (resultUser.rowCount == 0) {
             return {
                 errorMessage: `L'utilisateur n'a pas été trouvé...`
@@ -206,47 +206,107 @@ const dataMapper = {
         return responseToReturn;
     },
 
-    async updateProfile(userId, userData){
-        userData.user.password = await bcrypt.hash(userData.user.password, 10);
-        let fields = Object.keys(userData.user).map((key, index) => {
-            // console.log(typeof userData.user[key]);
-            if ( typeof userData.user[key] !== 'object') {
+    async getCities(city) {
+        const query = {
+            text: `
+                SELECT *
+                FROM "geo"
+                WHERE "city" = $1
+            `
+            , values: [city]
+        };
+        const result = await pool.query(query);
+        // console.log(result.rows[0]);
+        return (result);
+    },
+
+    async addCity(geo) {
+        // check if city exists in database
+        let result = await this.getCities(geo.city);
+
+        // if city found…
+        if (result.rowCount !== 0) {
+            console.log(`"${result.rows[0].city}" (id:${result.rows[0].id}), déjà présent en BDD geo`);
+            return result;
+        }
+
+        // city not found… Geo data processing
+        console.log('Ajout de l\'entité à la BDD geo');
+
+        let geoFields = Object.keys(geo).map((key) => {
+            return `"${key}"`
+        });
+
+        let geoValues = Object.values(geo);
+
+        // console.log(geoFields);
+        // console.log(geoValues);
+
+        let valuesRef = Object.keys(geo).map((_, index) => {
+            return `$${index + 1}`
+        });
+
+        const query = {
+            text: `
+                INSERT INTO "geo" ( ${geoFields} )
+                VALUES ( ${valuesRef.join()} )
+                RETURNING id
+                `,
+            values: [...geoValues]
+        }
+        // console.log(query);
+
+        result = await pool.query(query);
+        // console.log(result.rows[0] || null);
+        return result || null
+    },
+
+    async updateProfile(userId, userData) {
+
+        // does geo is key in userData?
+        if (userData.hasOwnProperty('geo')) {
+            const result = await this.addCity(userData.geo);
+            console.log(result.rows[0].id || null);
+            // TODO : pool.query pour modifier le geo_id de l'utilisateur
+        }
+
+        // User data processing
+
+        userData.password ? userData.password = await bcrypt.hash(userData.password, 10) : null;
+
+        let userFields = Object.keys(userData).map((key, index) => {
+            // console.log(typeof userData[key]);
+            if (typeof userData[key] !== 'object') {
                 return `"${key}" = $${index + 1}`
             }
         });
-        
-        fields = fields.filter(element => {
-            return element !== undefined;
-        });
 
-        
+        userFields = userFields.filter(element => element !== undefined);
 
-        let values = Object.values(userData.user).map((value, index) => {
+        let userValues = Object.values(userData).map((value) => {
             // console.log(typeof value);
-            if ( typeof value !== 'object') {
+            if (typeof value !== 'object') {
                 return value;
             }
         });
-        values = values.filter(element => {
-            return element !== undefined;
-        });
 
-        console.log(fields);
-        // console.log(fields.length + 1);
-        console.log(values);
-        
-        const query = {
-            text:`UPDATE "user"
-                SET ${fields}
-                WHERE id = $${fields.length + 1}
-                RETURNING *`,
-            values: [...values, userId]
+        userValues = userValues.filter(element => element !== undefined);
+
+        // console.log(userFields);
+        // console.log(userValues);
+
+        if (userFields.length > 0) {
+            const query = {
+                text: `UPDATE "user"
+                    SET ${userFields}
+                    WHERE id = $${userFields.length + 1}
+                    RETURNING *`,
+                values: [...userValues, userId]
+            }
+            const result = await pool.query(query);
+            console.log(result.rows[0]);
         }
-        
-        const results = await pool.query(query);
-        console.log(results.rows[0]);
-        
-    }
+    },
 }
 
 
