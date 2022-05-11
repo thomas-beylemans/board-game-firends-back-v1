@@ -11,11 +11,11 @@ INSERT INTO public.event(
     ('BoardGameEvent Strasbourg', 2, '2022-06-08 11:59:52.675661+02', 'Biggest event in France', '1', 1);
 
 INSERT INTO public.game(
-    "name"  )
+    "name", "picture"  )
     VALUES
-    ('the best BG of Earth'),
-    ('the BG of Earth'),
-    ('the BG');
+    ('Monopoly', 'https://cdn3.philibertnet.com/375938-large_default/monopoly-classique.jpg'),
+    ('Mystic Vale', 'https://cdn3.philibertnet.com/358209-large_default/mystic-vale.jpg'),
+    ('Dice Throne Adventures', 'https://cdn1.philibertnet.com/536883-medium_default/dice-throne-adventures.jpg');
 
 -- INSERT INTO public.chatroom(
 --     "name", "username", "message"  )
