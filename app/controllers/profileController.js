@@ -9,7 +9,7 @@ const profileController = {
             if (result.rowCount == 0) {
                 throw `L'utilisateur n'existe pas !`;
             }
-            res.status(200).json(result);
+            res.status(200).json({ user: result, accessToken: req.bearerToken });
         } catch (error) {
             res.status(404).json({ errorMessage: error });
         }

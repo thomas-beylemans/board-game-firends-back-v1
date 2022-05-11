@@ -4,20 +4,64 @@ const bcrypt = require("bcrypt"); // module pour crypter les mdp
 
 const dataMapper = {
     async getOneUser(userId) {
-        const query = {
-            text: `SELECT * FROM "user" WHERE id = $1`,
+        const queryUser = {
+            text: `SELECT 
+                "user"."id" AS "user_id",
+                "user"."email",
+                "user"."username",
+                "user"."avatar",
+                "user"."bio",
+                "geo"."id" AS "geo_id",
+                "geo"."city",
+                "geo"."postcode",
+                "geo"."lat",
+                "geo"."long"
+            FROM
+                "user"
+            INNER JOIN "geo" ON ("geo"."id" = "geo_id")
+            WHERE
+                "user"."id" = $1`,
             values: [userId]
         };
-        const result = await pool.query(query);
-
-        if (result.rowCount == 0) {
+        const queryGame = {
+            text: `SELECT
+                "game"."id" AS "id",
+                "game"."name" AS "name",
+                "game"."picture" AS "picture"
+            FROM
+                "user_owns_game"
+            INNER JOIN "game" ON ("game"."id" = "user_owns_game"."game_id")
+            WHERE
+                "user_owns_game"."user_id" = $1`,
+            values: [userId]
+        };
+        const resultUser = await pool.query(queryUser);
+        if (resultUser.rowCount == 0) {
             return {
                 // TODO: use the error handler
                 rowCount: 0,
                 errorMessage: "User not found"
             };
         }
-        return result.rows[0];
+        const resultGame = await pool.query(queryGame);
+
+        const responseToReturn = {
+            "id": resultUser.rows[0].user_id,
+            "email": resultUser.rows[0].email,
+            "username": resultUser.rows[0].username,
+            "avatar": resultUser.rows[0].avatar,
+            "bio": resultUser.rows[0].bio,
+            "geo": {
+                "id": resultUser.rows[0].geo_id,
+                "city": resultUser.rows[0].city,
+                "postcode": resultUser.rows[0].postcode,
+                "lat": resultUser.rows[0].lat,
+                "long": resultUser.rows[0].long
+            },
+            "game": resultGame.rows
+        };
+
+        return responseToReturn;
     },
     async checkUserRegistration(userData) {
         // trying to find the user in the database with his email
