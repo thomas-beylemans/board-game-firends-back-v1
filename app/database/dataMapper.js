@@ -90,6 +90,7 @@ const dataMapper = {
                 "event"."seats" AS "seats",
                 "event"."description" AS "description",
                 "event"."start_date" AS "start_date",
+                "user"."id" AS "event_admin_id",
                 "user"."username" AS "event_admin_username",
                 "user"."avatar" AS "event_admin_avatar"
 
@@ -132,6 +133,7 @@ const dataMapper = {
                 start_date: event.start_date,
                 description: event.description,
                 event_admin: {
+                    id: event.event_admin_id,
                     username: event.event_admin_username,
                     avatar: event.event_admin_avatar
                 }
