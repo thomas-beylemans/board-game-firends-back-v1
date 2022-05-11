@@ -132,6 +132,7 @@ const dataMapper = {
             text: `SELECT
                 "event"."id" AS "id",
                 "event"."name" AS "name",
+                "event"."event_picture" AS "picture",
                 "event"."seats" AS "seats",
                 "event"."description" AS "description",
                 "event"."start_date" AS "start_date",
@@ -174,6 +175,7 @@ const dataMapper = {
             return {
                 id: event.id,
                 name: event.name,
+                picture: event.picture,
                 seats: event.seats,
                 start_date: event.start_date,
                 description: event.description,
@@ -203,7 +205,6 @@ const dataMapper = {
             "event": events,
             "game": games
         };
-        console.log(responseToReturn);
         return responseToReturn;
     },
 
