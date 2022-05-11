@@ -1,0 +1,119 @@
+{
+    "user": {
+        "id": 1, // to decode from token
+        "email": "string", // to decode from token
+        "username": "string", // to decode from token
+        "avatar": "string",
+        "bio": "string",
+        "geo": {
+            "id": 1,
+            "city": "string",
+            "state_number": 1,
+            "lat": 1,
+            "long": 1
+        },
+        "games": [ //loop
+            {
+                "id": 1,
+                "name": "string",
+                "picture": "string",
+                "date_of_add": "timestamptz string"
+            }
+        ],
+        "events": [
+            {
+                "id": 1,
+                "name": "string",
+                "seats": 1,
+                "timestamp": "string",
+                "description": "string",
+                "event_admin": {
+                    "id": 1,
+                    "username": "string",
+                    "avatar": "string"
+                },
+                "geo": {
+                    "id": 1,
+                    "city": "string",
+                    "state_number": 1,
+                    "lat": 1,
+                    "long": 1
+                }
+            }
+        ]
+    },
+    "accessToken": "string"
+}
+{
+    "event": {
+        "id": 1,
+        "name": "string",
+        "seats": 1,
+        "timestamp": "string",
+        "description": "string",
+        "event_admin": {
+            "id": 1,
+            "username": "string",
+            "avatar": "string"
+        },
+        "geo": {
+            "id": 1,
+            "city": "string",
+            "state_number": 1,
+            "lat": 1,
+            "long": 1
+        }
+    },
+    "user": {
+        "id": 1, // to decode from token
+        "email": "string", // to decode from token
+        "username": "string", // to decode from token
+        "avatar": "string",
+        "bio": "string",
+        "geo": {
+            "id": 1,
+            "city": "string",
+            "state_number": 1,
+            "lat": 1,
+            "long": 1
+        }
+    "accessToken": "string"
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{
+    "geo": {
+        "id": 1,
+        "city": "string",
+        "state_number": 1,
+        "lat": 1,
+        "long": 1,
+        "creation_date": "timestamptz string",
+        "update_date": "timestamptz string"
+    },
+    {
+        "game": {
+            "id": 1,
+            "name": "string",
+            "picture": "string",
+            "creation_date": "timestamptz string",
+            "update_date": "timestamptz string"
+        }
+    }

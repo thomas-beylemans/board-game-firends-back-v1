@@ -9,7 +9,7 @@ const profileController = {
             if (result.rowCount == 0) {
                 throw `L'utilisateur n'existe pas !`;
             }
-            res.status(200).json(result);
+            res.status(200).json({ user: result, accessToken: req.bearerToken });
         } catch (error) {
             res.status(404).json({ errorMessage: error });
         }
@@ -18,9 +18,13 @@ const profileController = {
         // catch the id of the user inside the token
         const userId = Number(req.userToken.user.id);
         const result = await dataMapper.getDashboard(userId);
-        console.log(req.userToken);
-        console.log(req.bearerToken);
-        res.status(200).json({ data: result, accessToken: req.bearerToken });
+        res.status(200).json({ user: result, accessToken: req.bearerToken });
+    },
+    async updateProfile(req, res, next){
+        // catch the id of the user inside the token
+        const userId = Number(req.userToken.user.id);
+        const result = await dataMapper.updateProfile(userId, req.body);
+        res.status(200).json({ user: result, accessToken: req.bearerToken });
     }
 }
 

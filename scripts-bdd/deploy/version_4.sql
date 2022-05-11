@@ -4,16 +4,18 @@
 BEGIN;
 
 INSERT INTO public.event(
-    "name", "seats", "timestamp", "description", "admin", "geo_id" ) 
+    "name", "seats", "start_date", "description", "event_admin", "geo_id" ) 
     VALUES
-    ('BoardGameEvent Bordeaux', 100, '2022-05-06 11:59:52.675661+02', 'Biggest event in France', '1', 1);
+    ('BoardGameEvent Bordeaux', 7, '2022-06-06 11:59:52.675661+02', 'Biggest event in France', '1', 1),
+    ('BoardGameEvent Paris', 4, '2022-06-07 11:59:52.675661+02', 'Biggest event in France', '2', 2),
+    ('BoardGameEvent Strasbourg', 2, '2022-06-08 11:59:52.675661+02', 'Biggest event in France', '1', 1);
 
 INSERT INTO public.game(
-    "name"  )
+    "name", "picture"  )
     VALUES
-    ('the best BG of Earth'),
-    ('the BG of Earth'),
-    ('the BG');
+    ('Monopoly', 'https://cdn3.philibertnet.com/375938-large_default/monopoly-classique.jpg'),
+    ('Mystic Vale', 'https://cdn3.philibertnet.com/358209-large_default/mystic-vale.jpg'),
+    ('Dice Throne Adventures', 'https://cdn1.philibertnet.com/536883-medium_default/dice-throne-adventures.jpg');
 
 -- INSERT INTO public.chatroom(
 --     "name", "username", "message"  )
@@ -36,6 +38,8 @@ INSERT INTO public.user_joins_event(
     "user_id", "event_id" )
     VALUES
     (1, 1),
+    (1, 2),
+    (1, 3),
     (2, 1),
     (3, 1),
     (4, 1);

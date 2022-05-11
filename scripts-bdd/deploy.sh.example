@@ -3,9 +3,9 @@ export PGUSER=<user>
 export PGPASSWORD=<password>
 export PGDATABASE=<database>
 
-sqitch revert db:pg:bgf
-sqitch deploy db:pg:bgf
-sqitch verify db:pg:bgf
+sqitch revert db:pg:<database>
+sqitch deploy db:pg:<database>
+sqitch verify db:pg:<database>
 
 # # pour config Heroku
 # export PGUSER=<user>
@@ -13,9 +13,9 @@ sqitch verify db:pg:bgf
 # export PGDATABASE=<database>
 # export PGHOST=<host>
 
-# sqitch revert db:pg:dej8m0sd8ab9ml
-# sqitch deploy db:pg:dej8m0sd8ab9ml
-# sqitch verify db:pg:dej8m0sd8ab9ml
+# sqitch revert db:pg:<database>
+# sqitch deploy db:pg:<database>
+# sqitch verify db:pg:<database>
 
 
 ##############################################################################
