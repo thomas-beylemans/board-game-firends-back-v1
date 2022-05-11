@@ -313,6 +313,33 @@ const dataMapper = {
             }
         }
         return results.rows;
+    },
+    async getEventById(id){
+        const results = {
+            "rows": {
+                "event": {
+                    // "id": 100,
+                    "id": id,
+                    "name": "Event 100",
+                    "seats": 10,
+                    "description": "Je ne joue pas pour participer, je joue pour que vous sachiez que je suis le meilleur !",
+                    "start_date": "2022-05-04T18:00:00.000Z",
+                    "event_admin": {
+                        "id": 10,
+                        "username": "Chat10",
+                        "avatar": "https://cdn.pixabay.com/photo/2016/06/14/00/14/cat-1455468_960_720.jpg"
+                    },
+                    "geo": {
+                        "id": 17,
+                        "city": "Lattes",
+                        "postcode": 34970,
+                        "lat": 43.567,
+                        "long": 3.899
+                    }
+                }
+            }
+        }
+        return results.rows;
     }
 }
 

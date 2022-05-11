@@ -30,7 +30,7 @@ router.get('/profile/:profileId', checkAccessToken, profileController.getProfile
 router.get('/events', checkAccessToken, eventController.getEvents);
 // router.post('/events', checkAccessToken, eventController.addEvent);
 
-// router.get('/events/:id', checkAccessToken, eventController.getEventById);
+router.get('/events/:id', checkAccessToken, eventController.getEventById);
 // router.patch('/events/:id', checkAccessToken, eventController.updateEvent);
 // router.post('/events/:id/subscribe', checkAccessToken, eventController.subscribeToEventById);
 // router.delete('/events/:id/subscribe', checkAccessToken, eventController.unsubscribeToEventById);
