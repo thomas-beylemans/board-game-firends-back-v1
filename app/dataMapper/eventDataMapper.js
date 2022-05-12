@@ -113,6 +113,23 @@ const eventDataMapper = {
         } catch (error) {
             return {errorMessage: "Ajout de l'événement impossible."};
         }
+    },
+    async subscribeEventById(eventId, userId){
+        try {
+            const querySubscribeEvent = {
+                text: `INSERT INTO "user_joins_event" ("event_id", "user_id") VALUES ($1, $2)`,
+                values: [eventId, userId]
+            }
+            const result = await pool.query(querySubscribeEvent);
+            if (result.rowCount !== 0) {
+                return eventDataMapper.getEventById(eventId);
+            }
+        } catch (error) {
+            if (error.code === '23505') {
+                return {errorMessage: "Vous êtes déjà inscrit à cet événement."};
+            }
+            return {errorMessage: "Inscription à l'événement impossible."};
+        }
     }
 }
 
