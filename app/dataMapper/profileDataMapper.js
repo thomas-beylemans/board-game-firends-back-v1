@@ -233,9 +233,47 @@ const profileDataMapper = {
             // console.log(result.rows[0]);
         }
         // Updates done, return user entity
-        return profileDataMapper.getOneUser(userId);
-    
+        const userUpdated = await profileDataMapper.getOneUser(userId);
+        return userUpdated;
     },
+
+    async addGameToProfile(userId, gameData){
+        
+        // ajout ou récupération du BG
+        result = await toolsDataMapper.addGameToDatabase(gameData)
+        
+        // récupération du BG id
+        const gameId = result.rows[0].id;
+        console.log(gameId);
+        
+        // Check si pas déjà sur mon profil dans user_owns_game
+            // text : SELECT game_id
+            // FROM user_owns_game
+            // WHERE user_id = userId
+            // values : [gameId, userId]
+
+        // Si result.rowCount !== O {guard clause : return}
+
+        // Else => Ajout/INSERT INTO à la table de liaison user_owns_game
+
+            // const query = {
+            //     text: `UPDATE "user_owns_game"
+            //         SET "geo_id" = $1
+            //         WHERE id = $2
+            //         RETURNING *`,
+            //     values: [geo_id, userId]
+            // }
+
+            result = await pool.query(query);
+            console.log(result.rows[0]);
+            
+            let gameUpdated = await toolsDataMapper.findGameById(gameId);
+            console.log(gameUpdated.rows[0]);
+            return gameUpdated;
+        }
+
+
+
 }
 
 module.exports = profileDataMapper;

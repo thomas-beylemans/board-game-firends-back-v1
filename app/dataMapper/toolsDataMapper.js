@@ -52,6 +52,69 @@ const toolsDataMapper = {
             result = await pool.query(query);
             // console.log(result.rows[0] || null);
         return result || null
+    },
+
+    async findGameById(gameId){
+        const query = {
+            text: `
+            SELECT *
+            FROM "game"
+            WHERE "id" = $1
+            `
+            , values: [gameId]
+        };
+        const result = await pool.query(query);
+        return (result || null );
+    },
+
+    async findGameByName(gameName){
+        const query = {
+            text: `
+            SELECT *
+            FROM "game"
+            WHERE "name" = $1
+            `
+            , values: [gameName]
+        };
+        const result = await pool.query(query);
+        return (result || null );
+    },
+
+    async addGameToDatabase(game){
+        let result = await this.findGameByName(game.name);
+
+        // if found
+        if (result.rowCount !== 0) {
+            //v1.1 update la picture si celle ci est null et que dans {game} elle est renseignée
+            return result;
+        }
+
+        // if not found => add to db
+        let gameFields = Object.keys(game).map((key) => {
+            return `"${key}"`
+        });
+        // console.log(gameFields);
+
+        let gameValues = Object.values(game);
+        // console.log(gameValues);
+
+        
+        let valuesRef = Object.keys(game).map((_, index) => {
+            return `$${index + 1}`
+        });
+
+        const query = {
+            text: `
+                INSERT INTO "game" (${gameFields})
+                VALUES (${valuesRef.join()})
+                RETURNING id
+            `
+            , values: [...gameValues]
+        };
+        result = await pool.query(query);
+
+        // console.log(`game added`);
+        return result || null;
     }
 }
 
