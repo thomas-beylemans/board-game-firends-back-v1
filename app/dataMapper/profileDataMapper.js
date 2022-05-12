@@ -89,7 +89,7 @@ const profileDataMapper = {
             text: `SELECT
                 "event"."id" AS "id",
                 "event"."name" AS "name",
-                "event"."event_picture" AS "picture",
+                "event"."picture" AS "picture",
                 "event"."seats" AS "seats",
                 "event"."description" AS "description",
                 "event"."start_date" AS "start_date",
