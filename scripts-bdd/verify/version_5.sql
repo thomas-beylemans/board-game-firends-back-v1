@@ -2,6 +2,6 @@
 
 BEGIN;
 
-SELECT "event"."event_picture" FROM "event";
+SELECT "event"."picture" FROM "event";
 
 ROLLBACK;

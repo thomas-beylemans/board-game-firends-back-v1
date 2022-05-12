@@ -3,6 +3,6 @@
 BEGIN;
 
 ALTER TABLE "event"
-    DROP COLUMN IF EXISTS "event_picture" CASCADE;
+    DROP COLUMN IF EXISTS "picture" CASCADE;
 
 COMMIT;
