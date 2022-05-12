@@ -1,9 +1,9 @@
-const dataMapper = require('../database/dataMapper');
+const eventDataMapper = require('../dataMapper/eventDataMapper');
 
 const eventController = {
     async getEvents(req, res, next){
         try {
-            const result = await dataMapper.getEvents();
+            const result = await eventDataMapper.getEvents();
             res.status(200).json({ events: result, accessToken: req.bearerToken });
         }
         catch (error) {
@@ -13,7 +13,7 @@ const eventController = {
     async getEventById(req, res, next){
         try {
             const eventId = Number(req.params.id);
-            const result = await dataMapper.getEventById(eventId);
+            const result = await eventDataMapper.getEventById(eventId);
             res.status(200).json({ events: result, accessToken: req.bearerToken });
         }
         catch (error) {

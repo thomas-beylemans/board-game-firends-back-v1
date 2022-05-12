@@ -1,10 +1,10 @@
-const dataMapper = require('../database/dataMapper');
+const userDataMapper = require('../dataMapper/userDataMapper');
 const { createAccessToken } = require('../security/jwtManagement.js');
 
 const userController = {
     async register(req, res, next){
         try {
-            const result = await dataMapper.addOneUser(req.body);
+            const result = await userDataMapper.addOneUser(req.body);
             
             const accessToken = await createAccessToken(result);
             
@@ -20,7 +20,7 @@ const userController = {
     },
     async signIn(req, res, next){
         try {
-            const result = await dataMapper.checkUserRegistration(req.body);
+            const result = await userDataMapper.checkUserRegistration(req.body);
             
             if(result.isAuthorized === false) {
                 throw `Erreur de saisie de l'email ou du mot de passe !`;
@@ -34,8 +34,7 @@ const userController = {
             res.status(200).json({ accessToken });
             //?
         } catch (error) {
-            res.status(401).json(error);
-            // res.status(401).json({ errorMessage: error });
+            res.status(401).json({ errorMessage: error });
         }
     }
 }
