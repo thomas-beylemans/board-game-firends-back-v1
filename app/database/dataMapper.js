@@ -134,6 +134,11 @@ const dataMapper = {
                 "event"."seats" AS "seats",
                 "event"."description" AS "description",
                 "event"."start_date" AS "start_date",
+                "geo"."id" AS "geo_id",
+                "geo"."city",
+                "geo"."postcode",
+                "geo"."lat",
+                "geo"."long",
                 "user"."id" AS "event_admin_id",
                 "user"."username" AS "event_admin_username",
                 "user"."avatar" AS "event_admin_avatar"
@@ -180,6 +185,13 @@ const dataMapper = {
                     id: event.event_admin_id,
                     username: event.event_admin_username,
                     avatar: event.event_admin_avatar
+                },
+                geo: {
+                    id: event.geo_id,
+                    city: event.city,
+                    postcode: event.postcode,
+                    lat: event.lat,
+                    long: event.long
                 }
             }
         });
