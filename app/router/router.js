@@ -33,7 +33,7 @@ router.post('/events', checkAccessToken, eventController.addEvent);
 router.get('/events/:id', checkAccessToken, eventController.getEventById);
 // router.patch('/events/:id', checkAccessToken, eventController.updateEvent);
 router.post('/events/:id/subscribe', checkAccessToken, eventController.subscribeEventById);
-// router.delete('/events/:id/subscribe', checkAccessToken, eventController.unsubscribeEventById);
+router.delete('/events/:id/subscribe', checkAccessToken, eventController.unsubscribeEventById);
 
 
 module.exports = router;

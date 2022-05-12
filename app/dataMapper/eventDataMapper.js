@@ -1,3 +1,4 @@
+const { status } = require('express/lib/response');
 const pool = require('../database/dbClient');
 const toolsDataMapper = require('./toolsDataMapper')
 
@@ -129,6 +130,22 @@ const eventDataMapper = {
                 return {errorMessage: "Vous êtes déjà inscrit à cet événement."};
             }
             return {errorMessage: "Inscription à l'événement impossible."};
+        }
+    },
+    async unsubscribeEventById(eventId, userId){
+        try {
+            const queryUnsubscribeEvent = {
+                text: `DELETE FROM "user_joins_event" WHERE "event_id" = $1 AND "user_id" = $2`,
+                values: [eventId, userId]
+            }
+            const result = await pool.query(queryUnsubscribeEvent);
+            console.log(result);
+            if (result.rowCount !== 0) {
+                return { successMessage: "Vous êtes désinscrit de cet événement.", isUnsubscribed: true, eventId: eventId };
+            }
+            throw new Error({ errorMessage: "Vous n'êtes pas inscrit à cet événement.", isUnsubscribed: false, eventId: eventId } );
+        } catch (error) {
+            return { errorMessage: "Échec de la désinscription à l'événement.", isUnsubscribed: false };
         }
     }
 }
