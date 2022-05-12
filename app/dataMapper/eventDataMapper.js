@@ -109,7 +109,7 @@ const eventDataMapper = {
             }
             const result = await pool.query(queryAddEvent);
             if (result.rowCount !== 0) {
-                return eventDataMapper.getEventById(result.rows[0].id);
+                return { successMessage: "Événement créé !", result: await eventDataMapper.getEventById(result.rows[0].id) };
             }
         } catch (error) {
             return {errorMessage: "Ajout de l'événement impossible."};
