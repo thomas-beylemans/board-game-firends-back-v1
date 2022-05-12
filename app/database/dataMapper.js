@@ -226,13 +226,13 @@ const dataMapper = {
 
         // if city found…
         if (result.rowCount !== 0) {
-            console.log(`"${result.rows[0].city}" (id:${result.rows[0].id}), déjà présent en BDD geo`);
+            // console.log(`"${result.rows[0].city}" (id:${result.rows[0].id}), déjà présent en BDD geo`);
             return result;
         }
 
         // city not found… Geo data processing
-        console.log('Ajout de l\'entité à la BDD geo');
-
+        
+        // console.log('Ajout de l\'entité à la BDD geo');
         let geoFields = Object.keys(geo).map((key) => {
             return `"${key}"`
         });
@@ -265,13 +265,24 @@ const dataMapper = {
 
         // does geo is key in userData?
         if (userData.hasOwnProperty('geo')) {
-            const result = await this.addCity(userData.geo);
-            console.log(result.rows[0].id || null);
-            // TODO : pool.query pour modifier le geo_id de l'utilisateur
+            let result = await this.addCity(userData.geo);
+            const geo_id = result.rows[0].id || null;
+            // console.log();
+
+            // update geo_id profile
+            const query = {
+                text: `UPDATE "user"
+                    SET "geo_id" = $1
+                    WHERE id = $2
+                    RETURNING *`,
+                values: [geo_id, userId]
+            }
+
+            result = await pool.query(query);
+            // console.log(result.rows[0]);
         }
 
         // User data processing
-
         userData.password ? userData.password = await bcrypt.hash(userData.password, 10) : null;
 
         let userFields = Object.keys(userData).map((key, index) => {
@@ -304,8 +315,11 @@ const dataMapper = {
                 values: [...userValues, userId]
             }
             const result = await pool.query(query);
-            console.log(result.rows[0]);
+            // console.log(result.rows[0]);
         }
+        
+        // Updates done, return user entity
+        return this.getOneUser(userId);
     },
 }
 
