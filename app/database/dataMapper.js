@@ -206,14 +206,14 @@ const dataMapper = {
         return responseToReturn;
     },
 
-    async getCities(city) {
+    async getCities(city, postcode) {
         const query = {
             text: `
                 SELECT *
                 FROM "geo"
-                WHERE "city" = $1
+                WHERE "city" = $1 AND "postcode" = $2
             `
-            , values: [city]
+            , values: [city, postcode]
         };
         const result = await pool.query(query);
         // console.log(result.rows[0]);
@@ -222,7 +222,7 @@ const dataMapper = {
 
     async addCity(geo) {
         // check if city exists in database
-        let result = await this.getCities(geo.city);
+        let result = await this.getCities(geo.city, geo.postcode);
 
         // if city found…
         if (result.rowCount !== 0) {
@@ -263,8 +263,8 @@ const dataMapper = {
 
     async updateProfile(userId, userData) {
 
-        // does geo is key in userData?
-        if (userData.hasOwnProperty('geo')) {
+        // does geo key is exist in userData AND contains changes?
+        if (userData.hasOwnProperty('geo') && Object.keys(userData.geo).length !== 0) {
             let result = await this.addCity(userData.geo);
             const geo_id = result.rows[0].id || null;
             // console.log();

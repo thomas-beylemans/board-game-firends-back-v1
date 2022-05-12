@@ -23,7 +23,7 @@ const profileController = {
     async updateProfile(req, res, next) {
         try {
             // check if req.body has user's data
-            if (!req.body.hasOwnProperty('user')) {
+            if (!req.body.hasOwnProperty('user') || Object.keys(req.body.user).length === 0) {
                 throw `Données utilisateurs absents`;
             }
             // catch the id of the user inside the token
