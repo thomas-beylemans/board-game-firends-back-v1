@@ -6,9 +6,9 @@ BEGIN;
 INSERT INTO public.event(
     "name", "seats", "start_date", "description", "event_admin", "geo_id" ) 
     VALUES
-    ('BoardGameEvent Bordeaux', 7, '2022-06-06 11:59:52.675661+02', 'Biggest event in France', '1', 1),
-    ('BoardGameEvent Paris', 4, '2022-06-07 11:59:52.675661+02', 'Biggest event in France', '2', 2),
-    ('BoardGameEvent Strasbourg', 2, '2022-06-08 11:59:52.675661+02', 'Biggest event in France', '1', 1);
+    ('Event 100', 7, '2022-05-04T18:00:00.000Z', 'Je ne joue pas pour participer, je joue pour que vous sachiez que je suis le meilleur !', 7, 6),
+    ('Event 27', 4, '2022-05-25T19:00:00.000Z', 'Super soirée où ça sera fun mais on ne sait pas quoi faire pour l\''instant...', 6, 7),
+    ('Event trop trop cool', 2, '2022-05-27T12:00:00.000Z', 'Une aprèm entière à faire des solitaires entre amis, ça te dit ?!', 7, 8);
 
 INSERT INTO public.game(
     "name", "picture"  )
@@ -38,7 +38,6 @@ INSERT INTO public.user_joins_event(
     "user_id", "event_id" )
     VALUES
     (1, 1),
-    (1, 2),
     (1, 3),
     (2, 1),
     (3, 1),
