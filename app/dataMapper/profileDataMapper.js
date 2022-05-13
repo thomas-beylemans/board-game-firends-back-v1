@@ -237,35 +237,28 @@ const profileDataMapper = {
         return userUpdated;
     },
 
-    async addGameToProfile(userId, gameData){
+    async addGameToProfile(userId, gameReq){
         
         // Add or Get BG
-        result = await toolsDataMapper.addGameToDatabase(gameData)
+        result = await toolsDataMapper.addGameToDatabase(gameReq)
         
         // Get BG id added or found
         const gameId = result.rows[0].id;
-        console.log(gameId);
+        // console.log(gameId);
 
         // Add => Ajout/INSERT INTO à la table de liaison user_owns_game
-
             const query = {
                 text: `
                     INSERT INTO "user_owns_game" ("user_id" , "game_id")
                     VALUES ($1, $2)
-                    RETURNING *
-                `
+                    RETURNING *`
                 ,values: [userId, gameId]
             }
 
             result = await pool.query(query);
-            // console.log(result);
-            console.log(result.command);
-            console.log(result.rows[0]);
+            console.log(`${result.command} relation user:game`);
             
-            // // Retourner plutôt tous les BG / faire la méthode getUserGames
-            // let gameUpdated = await toolsDataMapper.findGameById(gameId);
-            // console.log(gameUpdated.rows[0]);
-            // return gameUpdated;
+            return await this.getOneUser(userId); // v1.1 return only games list
         }
 
 

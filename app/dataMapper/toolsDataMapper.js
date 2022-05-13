@@ -22,9 +22,9 @@ const toolsDataMapper = {
             // console.log(`"${result.rows[0].city}" (id:${result.rows[0].id}), déjà présent en BDD geo`);
             return result;
         }
-        
+
         // city not found… Geo data processing
-        
+
         // console.log('Ajout de l\'entité à la BDD geo');
         let geoFields = Object.keys(geo).map((key) => {
             return `"${key}"`
@@ -34,7 +34,7 @@ const toolsDataMapper = {
 
         // console.log(geoFields);
         // console.log(geoValues);
-        
+
         let valuesRef = Object.keys(geo).map((_, index) => {
             return `$${index + 1}`
         });
@@ -45,16 +45,16 @@ const toolsDataMapper = {
                 VALUES ( ${valuesRef.join()} )
                 RETURNING id
                 `,
-                values: [...geoValues]
-            }
-            // console.log(query);
-            
-            result = await pool.query(query);
-            // console.log(result.rows[0] || null);
+            values: [...geoValues]
+        }
+        // console.log(query);
+
+        result = await pool.query(query);
+        // console.log(result.rows[0] || null);
         return result || null
     },
 
-    async findGameById(gameId){
+    async findGameById(gameId) {
         const query = {
             text: `
             SELECT *
@@ -64,10 +64,10 @@ const toolsDataMapper = {
             , values: [gameId]
         };
         const result = await pool.query(query);
-        return (result || null );
+        return result
     },
 
-    async findGameByName(gameName){
+    async findGameByName(gameName) {
         const query = {
             text: `
             SELECT *
@@ -77,15 +77,45 @@ const toolsDataMapper = {
             , values: [gameName]
         };
         const result = await pool.query(query);
-        return (result || null );
+        return result
     },
 
-    async addGameToDatabase(game){
+    async updateGame(gameDb, gameReq) {
+        // update only concerns image at the moment
+
+        console.log(gameDb.picture);
+        console.log(gameReq.picture);
+
+        // only update picture if it's not already set
+        if (gameDb.picture === null && gameReq.picture !== undefined && gameReq.picture !== null) {
+            // update image in DB => query SQL 
+            // console.log("Updating picture");
+            const query = {
+                text: `UPDATE "game"
+                    SET picture = $1
+                    WHERE id = $2
+                    RETURNING *`,
+                values: [gameReq.picture, gameDb.id]
+            };
+            const result = await pool.query(query);
+            return result
+            }
+
+// Tests:
+// - if gameDb exists w/ picture && gameReq w/ picture => no update picture => OK
+// - if gameDb exists w/ picture && gameReq w/o picture => no update picture  => OK
+// - if gameDb exists w/o picture && gameReq w/ picture => update picture => OK
+// - if gameDb exists w/o picture && gameReq w/o picture => no update picture  => OK
+
+        return await this.findGameById(gameDb.id);
+    },
+
+    async addGameToDatabase(game) {
         let result = await this.findGameByName(game.name);
 
-        // if found
+        // if found, try update
         if (result.rowCount !== 0) {
-            //v1.1 update la picture si celle ci est null et que dans {game} elle est renseignée
+            result = await this.updateGame(result.rows[0], game);
             return result;
         }
 
@@ -98,7 +128,7 @@ const toolsDataMapper = {
         let gameValues = Object.values(game);
         // console.log(gameValues);
 
-        
+
         let valuesRef = Object.keys(game).map((_, index) => {
             return `$${index + 1}`
         });
@@ -113,8 +143,9 @@ const toolsDataMapper = {
         };
         result = await pool.query(query);
 
-        // console.log(`game added`);
-        return result || null;
+        console.log(result.rows[0]);
+        console.log(`${result.command} game`);
+        return result;
     }
 }
 
