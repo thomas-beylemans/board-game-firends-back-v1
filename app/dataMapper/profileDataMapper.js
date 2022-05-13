@@ -82,8 +82,8 @@ const profileDataMapper = {
                 "user"
             INNER JOIN "geo" ON ("geo"."id" = "geo_id")
             WHERE
-                "user"."id" = 1`
-            // values: [userId]
+                "user"."id" = $1`,
+            values: [userId]
         };
         const queryEvent = {
             text: `SELECT
@@ -108,8 +108,8 @@ const profileDataMapper = {
             INNER JOIN "geo" ON ("event"."geo_id" = "geo"."id")
             INNER JOIN "user" ON ("event"."event_admin" = "user"."id")
             WHERE
-                "user_joins_event"."user_id" = 1`
-            // values: [userId]
+                "user_joins_event"."user_id" = $1`,
+            values: [userId]
         };
         const queryGame = {
             text: `SELECT
@@ -121,8 +121,8 @@ const profileDataMapper = {
                 "user_owns_game"
             INNER JOIN "game" ON ("game"."id" = "user_owns_game"."game_id")
             WHERE
-                "user_owns_game"."user_id" = 1`
-            // values: [userId]
+                "user_owns_game"."user_id" = $1`,
+            values: [userId]
         };
         const resultUser = await pool.query(queryUser);
         const resultEvent = await pool.query(queryEvent);
