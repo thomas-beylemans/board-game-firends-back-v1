@@ -12,7 +12,18 @@ INSERT INTO public.geo(
     ('Toulouse', 31000, 43.60, 1.44),
     ('Lattes', 34970, 43.567, 3.899),
     ('Villeneuve-lès-Maguelone', 34750, 43.5119, 3.8589),
-    ('Palavas-les-Flots', 34250, 43.5323, 3.9346);
+    ('Palavas-les-Flots', 34250, 43.5323, 3.9346),
+    ('Saint-Paul-et-Valmalle', 34570, 43.6152, 4.6843),
+    ('Sète', 34200, 43.3841, 3.644),
+    ('Bordeaux', 33000, 44.83, -0.57),
+    ('Nantes', 44000, 47.21, -1.55),
+    ('Le Havre', 70000, 49.49, 0.1),
+    ('Rennes', 35000, 48.08, -1.67),
+    ('Brest', 29000, 48.42, -4.48),
+    ('Le Mans', 50000, 48.00, 0.00),
+    ('Dijon', 21000, 47.32, 5.04),
+    ('Ajaccio', 20000, 41.91, 8.5),
+    ('Cannes', 20000, 43.55, 7.01);
 
 
 INSERT INTO public.user(

@@ -8,7 +8,9 @@ INSERT INTO public.event(
     VALUES
     ('Event 100', 7, '2022-05-04T18:00:00.000Z', 'Je ne joue pas pour participer, je joue pour que vous sachiez que je suis le meilleur !', 7, 6),
     ('Event 27', 4, '2022-05-25T19:00:00.000Z', 'Super soirée où ça sera fun mais on ne sait pas quoi faire pour l\''instant...', 6, 7),
-    ('Event trop trop cool', 2, '2022-05-27T12:00:00.000Z', 'Une aprèm entière à faire des solitaires entre amis, ça te dit ?!', 7, 8);
+    ('Event trop trop cool', 2, '2022-05-27T12:00:00.000Z', 'Une aprèm entière à faire des solitaires entre amis, ça te dit ?!', 7, 8),
+    ('Event pas si mal', 2, '2022-05-26T12:00:00.000Z', 'B;ab;;laskdg;lkasdg;lk; ladjg', 7, 9),
+    ('Grosse teuf', 2, '2022-05-29T12:00:00.000Z', 'mnvkjfsdnvkgjrrhg', 7, 10);
 
 INSERT INTO public.game(
     "name", "picture"  )
