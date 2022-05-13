@@ -3,7 +3,7 @@ const profileDataMapper = require('../dataMapper/profileDataMapper');
 
 const eventController = {
     async getEvents(req, res, next){
-        const zoomFactor = req.body['zoomFactor'] ? req.body['zoomFactor'] : 1;
+        const zoomFactor = req.query['zoomFactor'] ? req.query['zoomFactor'] : 1;
         try {
             const userProfile = await profileDataMapper.getOneUser(req.userToken.user.id);
             const result = await eventDataMapper.getEvents(userProfile, zoomFactor);

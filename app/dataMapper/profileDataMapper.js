@@ -194,7 +194,7 @@ const profileDataMapper = {
             result = await pool.query(query);
             // console.log(result.rows[0]);
         }
-
+        
         // User data processing
         userData.password ? userData.password = await bcrypt.hash(userData.password, 10) : null;
 
