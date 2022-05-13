@@ -233,9 +233,36 @@ const profileDataMapper = {
             // console.log(result.rows[0]);
         }
         // Updates done, return user entity
-        return profileDataMapper.getOneUser(userId);
-    
+        const userUpdated = await profileDataMapper.getOneUser(userId);
+        return userUpdated;
     },
+
+    async addGameToProfile(userId, gameReq){
+        
+        // Add or Get BG
+        result = await toolsDataMapper.addGameToDatabase(gameReq)
+        
+        // Get BG id added or found
+        const gameId = result.rows[0].id;
+        // console.log(gameId);
+
+        // Add => Ajout/INSERT INTO à la table de liaison user_owns_game
+            const query = {
+                text: `
+                    INSERT INTO "user_owns_game" ("user_id" , "game_id")
+                    VALUES ($1, $2)
+                    RETURNING *`
+                ,values: [userId, gameId]
+            }
+
+            result = await pool.query(query);
+            console.log(`${result.command} relation user:game`);
+            
+            return await this.getOneUser(userId); // v1.1 return only games list
+        }
+
+
+
 }
 
 module.exports = profileDataMapper;
