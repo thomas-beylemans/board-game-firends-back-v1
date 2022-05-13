@@ -155,8 +155,6 @@ const profileDataMapper = {
                 }
             }
         });
-        const games = resultGame.rows.map(game => game);
-
 
         const responseToReturn = {
             "id": resultUser.rows[0].user_id,
@@ -172,7 +170,7 @@ const profileDataMapper = {
                 "long": resultUser.rows[0].long
             },
             "event": events,
-            "game": games
+            "game": resultGame.rows
         };
         return responseToReturn;
     },
@@ -237,32 +235,66 @@ const profileDataMapper = {
         return userUpdated;
     },
 
-    async addGameToProfile(userId, gameReq){
-        
+    async addGameToProfile(userId, gameReq) {
+
         // Add or Get BG
-        result = await toolsDataMapper.addGameToDatabase(gameReq)
+        let result = await toolsDataMapper.addGameToDatabase(gameReq)
 
         // Get BG id added or found
         const gameId = result.rows[0].id;
         // console.log(gameId);
 
         // Add => Ajout/INSERT INTO à la table de liaison user_owns_game
-            const query = {
-                text: `
+        const query = {
+            text: `
                     INSERT INTO "user_owns_game" ("user_id" , "game_id")
                     VALUES ($1, $2)
                     RETURNING *`
-                ,values: [userId, gameId]
-            }
-
-            result = await pool.query(query);
-            // console.log(`${result.command} relation user:game`);
-            
-            return await this.getOneUser(userId); // v1.1 return only games list
+            , values: [userId, gameId]
         }
 
+        result = await pool.query(query);
+        // console.log(`${result.command} relation user:game`);
 
+        result = await this.getUserGamesList(userId); 
+        return {game: result.rows};
+    },
 
+    async getUserGamesList(userId) {
+        const query = {
+            text: `SELECT
+                    "game"."id" AS "id",
+                    "game"."name" AS "name",
+                    "game"."picture" AS "picture"
+                FROM
+                    "user_owns_game"
+                INNER JOIN "game" ON ("game"."id" = "user_owns_game"."game_id")
+                WHERE
+                    "user_owns_game"."user_id" = $1`,
+            values: [userId]
+        };
+        const result = await pool.query(query);
+        // console.log(result.rows);
+        return result;
+    },
+
+    async deleteGameFromGamesList(userId, gameId) {
+        try {
+            const query = {
+                text: `
+                    DELETE
+                    FROM "user_owns_game"
+                    WHERE "game_id" = $1 AND "user_id" = $2`,
+                values: [gameId, userId]
+            }
+            const result = await pool.query(query);
+            if (result.rowCount === 0) throw new Error({ errorMessage: "Le jeu n'a pas été supprimé", isDeleted: false, gameId: gameId });
+
+            return { successMessage: "Le jeu a été supprimé", isDeleted: true, gameId: gameId };
+        } catch (error) {
+            return { errorMessage: "Échec de la suppression du jeu.", isDeleted: false, gameId: gameId };
+        }
+    }
 }
 
 module.exports = profileDataMapper;
