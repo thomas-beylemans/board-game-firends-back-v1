@@ -1,12 +1,16 @@
 const eventDataMapper = require('../dataMapper/eventDataMapper');
+const profileDataMapper = require('../dataMapper/profileDataMapper');
 
 const eventController = {
     async getEvents(req, res, next){
+        const zoomFactor = req.body['zoomFactor'] ? req.body['zoomFactor'] : 1;
         try {
-            const result = await eventDataMapper.getEvents();
-            res.status(200).json({ events: result, accessToken: req.bearerToken });
+            const userProfile = await profileDataMapper.getOneUser(req.userToken.user.id);
+            const result = await eventDataMapper.getEvents(userProfile, zoomFactor);
+            res.status(200).json({ events: result, zoomFactor: zoomFactor, accessToken: req.bearerToken });
         }
         catch (error) {
+            console.log(error);
             res.status(404).json({ errorMessage: error });
         }
     },
