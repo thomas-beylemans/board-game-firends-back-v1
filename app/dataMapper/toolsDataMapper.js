@@ -38,20 +38,24 @@ const toolsDataMapper = {
         let valuesRef = Object.keys(geo).map((_, index) => {
             return `$${index + 1}`
         });
-
-        const query = {
-            text: `
-                INSERT INTO "geo" ( ${geoFields} )
-                VALUES ( ${valuesRef.join()} )
-                RETURNING id
-                `,
-                values: [...geoValues]
-            }
-            // console.log(query);
-            
-            result = await pool.query(query);
-            // console.log(result.rows[0] || null);
-        return result || null
+        // console.log(valuesRef);
+        try {
+            const query = {
+                text: `
+                    INSERT INTO "geo" ( ${geoFields} )
+                    VALUES ( ${valuesRef.join()} )
+                    RETURNING id
+                    `,
+                    values: [...geoValues]
+                }
+                // console.log(query);
+                
+                result = await pool.query(query);
+                // console.log(result.rows[0]);
+            return result || null
+        } catch (error) {
+            console.log(error);
+        }
     }
 }
 

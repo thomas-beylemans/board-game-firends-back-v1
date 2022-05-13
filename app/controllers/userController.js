@@ -12,10 +12,12 @@ const userController = {
             req.userToken = accessToken;
             // TODO: précicer le contenu de la réponse à apporter au front
             res.status(201).json({
+                successMessage: 'Utilisateur créé avec succès !',
+                isUserCreated: true,
                 accessToken
             });
         } catch (error) {
-            res.status(401).json({ errorMessage: error.detail});
+            res.status(401).json({ isUserCreated: false, errorMessage: error });
         }
     },
     async signIn(req, res, next){

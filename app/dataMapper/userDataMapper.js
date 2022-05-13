@@ -1,10 +1,15 @@
 const pool = require('../database/dbClient');
-const bcrypt = require("bcrypt"); // module pour crypter les mdp
+const toolsDataMapper = require('./toolsDataMapper');
+const bcrypt = require("bcrypt");
 
 const userDataMapper = {
     async addOneUser(userToAdd) {
+        if(await userDataMapper.isUserExistsByEmail(userToAdd.email)) {
+            throw `L'email "${userToAdd.email}" est déjà utilisé !`;
+        }
         const hashedPassword = await bcrypt.hash(userToAdd.password, 10);
-        const query = {
+        const infoCity = await toolsDataMapper.addCity(userToAdd.geo);
+        const queryUser = {
             text: `INSERT INTO "user" (
                 "email", "password", "username", "bio", "geo_id"
                 )
@@ -15,11 +20,18 @@ const userDataMapper = {
                 hashedPassword,
                 userToAdd.username,
                 userToAdd.bio,
-                1
+                infoCity.rows[0].id
             ]
         };
-        const results = await pool.query(query);
-        return results.rows[0];
+        try {
+            const results = await pool.query(queryUser);
+            return results.rows[0];
+        } catch (error) {
+            if(error.code === '23505' && error.constraint === 'user_username_key') {
+                throw `Le pseudo "${userToAdd.username}" est déjà utilisé !`
+            }
+            throw error.detail;
+        }
     },
     async checkUserRegistration(userData) {
         // trying to find the user in the database with his email
@@ -46,6 +58,14 @@ const userDataMapper = {
 
         return userFound.rows[0];
     },
+    async isUserExistsByEmail(email) {
+        const query = {
+            text: `SELECT * FROM "user" WHERE "email" = $1`,
+            values: [email]
+        };
+        const userFound = await pool.query(query);
+        return userFound.rowCount ? true : false;
+    }
 }
 
 module.exports = userDataMapper;
