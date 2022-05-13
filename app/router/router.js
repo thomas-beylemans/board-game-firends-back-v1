@@ -21,7 +21,7 @@ router.patch('/profile', checkAccessToken, profileController.updateProfile);
 // router.delete('/profile', checkAccessToken, profileController.deleteProfile);
 
 router.post('/profile/my-games', checkAccessToken, profileController.addGame);
-// router.delete('/profile/my-games/:id', checkAccessToken, profileController.deleteGame);
+router.delete('/profile/my-games', checkAccessToken, profileController.deleteGame);
 
 router.get('/profile/:profileId', checkAccessToken, profileController.getProfileById);
 

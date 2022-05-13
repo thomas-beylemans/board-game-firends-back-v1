@@ -150,7 +150,9 @@ const toolsDataMapper = {
         // console.log(result.rows[0]);
         // console.log(`${result.command} game`);
         return result;
-    }
+    },
+
+
 }
 
 
