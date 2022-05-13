@@ -7,13 +7,14 @@ const eventController = {
         try {
             const userProfile = await profileDataMapper.getOneUser(req.userToken.user.id);
             const result = await eventDataMapper.getEvents(userProfile, zoomFactor);
-            let responseToReturn = { accessToken: req.bearerToken, zoomFactor, events: result };
+            let responseToReturn = { accessToken: req.bearerToken, zoomFactor };
             if (result.length === 0) {
                 responseToReturn.isEventFound = false;
                 responseToReturn.message = `Il n'y a pas d'événement dans cette zone de recherche`;
             } else {
                 responseToReturn.isEventFound = true;
             }
+            responseToReturn.events = result;
             res.status(200).json(responseToReturn);
         }
         catch (error) {
