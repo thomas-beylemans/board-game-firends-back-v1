@@ -28,12 +28,12 @@ router.get('/profile/:profileId', checkAccessToken, profileController.getProfile
 // // events?city=nantes
 // // events?city=nantes&date=2020-01-01 => have a look on the search by date functionnality
 router.get('/events', checkAccessToken, eventController.getEvents);
-// router.post('/events', checkAccessToken, eventController.addEvent);
+router.post('/events', checkAccessToken, eventController.addEvent);
 
 router.get('/events/:id', checkAccessToken, eventController.getEventById);
 // router.patch('/events/:id', checkAccessToken, eventController.updateEvent);
-// router.post('/events/:id/subscribe', checkAccessToken, eventController.subscribeToEventById);
-// router.delete('/events/:id/subscribe', checkAccessToken, eventController.unsubscribeToEventById);
+router.post('/events/:id/subscribe', checkAccessToken, eventController.subscribeEventById);
+router.delete('/events/:id/subscribe', checkAccessToken, eventController.unsubscribeEventById);
 
 
 module.exports = router;

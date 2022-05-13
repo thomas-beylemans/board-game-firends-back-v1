@@ -47,13 +47,15 @@ CREATE TABLE IF NOT EXISTS "game" (
 CREATE TABLE IF NOT EXISTS "user_joins_event" (
     "user_id" int NOT NULL REFERENCES "user"("id") ON DELETE CASCADE,
     "event_id" int NOT NULL REFERENCES "event"("id") ON DELETE CASCADE,
-    "created_at" timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP
+    "created_at" timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE ("user_id", "event_id")
 );
 
 CREATE TABLE IF NOT EXISTS "user_owns_game" (
     "user_id" int NOT NULL REFERENCES "user"("id") ON DELETE CASCADE,
     "game_id" int NOT NULL REFERENCES "game"("id") ON DELETE CASCADE,
-    "created_at" timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP
+    "created_at" timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE ("user_id", "game_id")
 );
 
 

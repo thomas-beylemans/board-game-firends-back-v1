@@ -1,4 +1,6 @@
+const { status } = require('express/lib/response');
 const pool = require('../database/dbClient');
+const toolsDataMapper = require('./toolsDataMapper')
 
 const eventDataMapper = {
     async getEvents(){
@@ -97,6 +99,54 @@ const eventDataMapper = {
             }
         }
         return results.rows;
+    },
+    async addEvent(event, userId){
+        try {
+            const infoCity = await toolsDataMapper.addCity(event.geo, event.geo);
+            const queryAddEvent = {
+                text: `INSERT INTO event ("name", "picture", "seats", "description", "start_date", "event_admin", "geo_id") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"`,
+                values: [event.name, event.picture, event.seats, event.description, event.start_date, userId, infoCity.rows[0].id]
+            }
+            const result = await pool.query(queryAddEvent);
+            if (result.rowCount !== 0) {
+                return { successMessage: "Événement créé !", result: await eventDataMapper.getEventById(result.rows[0].id) };
+            }
+        } catch (error) {
+            return {errorMessage: "Ajout de l'événement impossible."};
+        }
+    },
+    async subscribeEventById(eventId, userId){
+        try {
+            const querySubscribeEvent = {
+                text: `INSERT INTO "user_joins_event" ("event_id", "user_id") VALUES ($1, $2)`,
+                values: [eventId, userId]
+            }
+            const result = await pool.query(querySubscribeEvent);
+            if (result.rowCount !== 0) {
+                return eventDataMapper.getEventById(eventId);
+            }
+        } catch (error) {
+            if (error.code === '23505') {
+                return {errorMessage: "Vous êtes déjà inscrit à cet événement."};
+            }
+            return {errorMessage: "Inscription à l'événement impossible."};
+        }
+    },
+    async unsubscribeEventById(eventId, userId){
+        try {
+            const queryUnsubscribeEvent = {
+                text: `DELETE FROM "user_joins_event" WHERE "event_id" = $1 AND "user_id" = $2`,
+                values: [eventId, userId]
+            }
+            const result = await pool.query(queryUnsubscribeEvent);
+            console.log(result);
+            if (result.rowCount !== 0) {
+                return { successMessage: "Vous êtes désinscrit de cet événement.", isUnsubscribed: true, eventId: eventId };
+            }
+            throw new Error({ errorMessage: "Vous n'êtes pas inscrit à cet événement.", isUnsubscribed: false, eventId: eventId } );
+        } catch (error) {
+            return { errorMessage: "Échec de la désinscription à l'événement.", isUnsubscribed: false };
+        }
     }
 }
 
