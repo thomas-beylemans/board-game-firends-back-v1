@@ -139,7 +139,6 @@ const eventDataMapper = {
                 values: [eventId, userId]
             }
             const result = await pool.query(queryUnsubscribeEvent);
-            console.log(result);
             if (result.rowCount !== 0) {
                 return { successMessage: "Vous êtes désinscrit de cet événement.", isUnsubscribed: true, eventId: eventId };
             }

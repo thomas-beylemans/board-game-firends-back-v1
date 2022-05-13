@@ -9,7 +9,8 @@ CREATE TABLE IF NOT EXISTS "geo" (
     "lat" float NOT NULL,
     "long" float NOT NULL,
     "created_at" timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP
+    "updated_at" timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE ("city", "postcode")
 );
 
 CREATE TABLE IF NOT EXISTS "user" (

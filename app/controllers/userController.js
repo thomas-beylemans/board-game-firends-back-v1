@@ -4,7 +4,7 @@ const { createAccessToken } = require('../security/jwtManagement.js');
 const userController = {
     async register(req, res, next){
         try {
-            const result = await userDataMapper.addOneUser(req.body);
+            const result = await userDataMapper.addOneUser(req.body.user);
             
             const accessToken = await createAccessToken(result);
             

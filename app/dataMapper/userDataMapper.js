@@ -4,23 +4,23 @@ const bcrypt = require("bcrypt");
 
 const userDataMapper = {
     async addOneUser(userToAdd) {
-        const hashedPassword = await bcrypt.hash(userToAdd.password, 10);
-        const infoCity = await toolsDataMapper.addCity(userToAdd.geo);
-        const queryUser = {
-            text: `INSERT INTO "user" (
-                "email", "password", "username", "bio", "geo_id"
-                )
-                VALUES ($1, $2, $3, $4, $5)
-                RETURNING "id", "email", "username", "geo_id"`,
-            values: [
-                userToAdd.email,
-                hashedPassword,
-                userToAdd.username,
-                userToAdd.bio,
-                infoCity.rows[0].id
-            ]
-        };
         try {
+            const hashedPassword = await bcrypt.hash(userToAdd.password, 10);
+            const infoCity = await toolsDataMapper.addCity(userToAdd.geo);
+            const queryUser = {
+                text: `INSERT INTO "user" (
+                    "email", "password", "username", "bio", "geo_id"
+                    )
+                    VALUES ($1, $2, $3, $4, $5)
+                    RETURNING "id", "email", "username", "geo_id"`,
+                values: [
+                    userToAdd.email,
+                    hashedPassword,
+                    userToAdd.username,
+                    userToAdd.bio,
+                    infoCity.rows[0].id
+                ]
+            };
             const results = await pool.query(queryUser);
             return results.rows[0];
         } catch (error) {
@@ -29,7 +29,7 @@ const userDataMapper = {
             } else if(error.code === '23505' && error.constraint === 'user_email_key') {
                 throw `L'email "${userToAdd.email}" est déjà utilisé !`
             }
-            throw error.detail;
+            throw error;
         }
     },
     async checkUserRegistration(userData) {
