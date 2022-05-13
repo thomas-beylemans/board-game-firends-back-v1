@@ -33,7 +33,7 @@ const eventDataMapper = {
         }
         const result = await pool.query(query);
         if(result.rowCount === 0){
-            return { message: `Il n'y a pas d'événement dans cette zone de recherche.`, zoomFactor: zoomFactor }
+            return [];
         }
         const resultToReturn = result.rows.map(event => {
             return {
