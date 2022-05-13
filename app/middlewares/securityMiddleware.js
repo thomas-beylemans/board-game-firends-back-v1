@@ -11,7 +11,7 @@ const securityMiddleware = {
         // if the token is not found in the headers
         if (!token) {
             return res.status(401).json({
-                errorMessage: 'Accès interdit, il faut être indentifié !'
+                errorMessage: 'Accès interdit, il faut être identifié !'
             });
         }
         
