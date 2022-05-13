@@ -4,9 +4,6 @@ const bcrypt = require("bcrypt");
 
 const userDataMapper = {
     async addOneUser(userToAdd) {
-        if(await userDataMapper.isUserExistsByEmail(userToAdd.email)) {
-            throw `L'email "${userToAdd.email}" est déjà utilisé !`;
-        }
         const hashedPassword = await bcrypt.hash(userToAdd.password, 10);
         const infoCity = await toolsDataMapper.addCity(userToAdd.geo);
         const queryUser = {
@@ -29,6 +26,8 @@ const userDataMapper = {
         } catch (error) {
             if(error.code === '23505' && error.constraint === 'user_username_key') {
                 throw `Le pseudo "${userToAdd.username}" est déjà utilisé !`
+            } else if(error.code === '23505' && error.constraint === 'user_email_key') {
+                throw `L'email "${userToAdd.email}" est déjà utilisé !`
             }
             throw error.detail;
         }
@@ -57,14 +56,6 @@ const userDataMapper = {
         delete userFound.rows[0].password;
 
         return userFound.rows[0];
-    },
-    async isUserExistsByEmail(email) {
-        const query = {
-            text: `SELECT * FROM "user" WHERE "email" = $1`,
-            values: [email]
-        };
-        const userFound = await pool.query(query);
-        return userFound.rowCount ? true : false;
     }
 }
 
