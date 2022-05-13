@@ -239,37 +239,33 @@ const profileDataMapper = {
 
     async addGameToProfile(userId, gameData){
         
-        // ajout ou récupération du BG
+        // Add or Get BG
         result = await toolsDataMapper.addGameToDatabase(gameData)
         
-        // récupération du BG id
+        // Get BG id added or found
         const gameId = result.rows[0].id;
         console.log(gameId);
-        
-        // Check si pas déjà sur mon profil dans user_owns_game
-            // text : SELECT game_id
-            // FROM user_owns_game
-            // WHERE user_id = userId
-            // values : [gameId, userId]
 
-        // Si result.rowCount !== O {guard clause : return}
+        // Add => Ajout/INSERT INTO à la table de liaison user_owns_game
 
-        // Else => Ajout/INSERT INTO à la table de liaison user_owns_game
-
-            // const query = {
-            //     text: `UPDATE "user_owns_game"
-            //         SET "geo_id" = $1
-            //         WHERE id = $2
-            //         RETURNING *`,
-            //     values: [geo_id, userId]
-            // }
+            const query = {
+                text: `
+                    INSERT INTO "user_owns_game" ("user_id" , "game_id")
+                    VALUES ($1, $2)
+                    RETURNING *
+                `
+                ,values: [userId, gameId]
+            }
 
             result = await pool.query(query);
+            // console.log(result);
+            console.log(result.command);
             console.log(result.rows[0]);
             
-            let gameUpdated = await toolsDataMapper.findGameById(gameId);
-            console.log(gameUpdated.rows[0]);
-            return gameUpdated;
+            // // Retourner plutôt tous les BG / faire la méthode getUserGames
+            // let gameUpdated = await toolsDataMapper.findGameById(gameId);
+            // console.log(gameUpdated.rows[0]);
+            // return gameUpdated;
         }
 
 
