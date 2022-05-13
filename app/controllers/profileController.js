@@ -37,11 +37,12 @@ const profileController = {
     async addGame(req, res, next){
         try {
              // check if req.body has game's data
-             if (!req.body.hasOwnProperty('game') || Object.keys(req.body.game).length === 0) {
+             if (!req.body.user.hasOwnProperty('game') || Object.keys(req.body.user.game).length === 0) {
+                console.log('toto');
                 throw `Données jeu absents`;
             }
             const userId = Number(req.userToken.user.id);
-            const result = await profileDataMapper.addGameToProfile(userId, req.body.game);
+            const result = await profileDataMapper.addGameToProfile(userId, req.body.user.game);
             res.status(200).json({ user: result, accessToken: req.bearerToken });
         } catch (error) {
             res.status(403).json({ errorMessage: error });

@@ -241,7 +241,7 @@ const profileDataMapper = {
         
         // Add or Get BG
         result = await toolsDataMapper.addGameToDatabase(gameReq)
-        
+
         // Get BG id added or found
         const gameId = result.rows[0].id;
         // console.log(gameId);
@@ -256,7 +256,7 @@ const profileDataMapper = {
             }
 
             result = await pool.query(query);
-            console.log(`${result.command} relation user:game`);
+            // console.log(`${result.command} relation user:game`);
             
             return await this.getOneUser(userId); // v1.1 return only games list
         }

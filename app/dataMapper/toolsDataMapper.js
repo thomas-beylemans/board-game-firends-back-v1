@@ -87,8 +87,8 @@ const toolsDataMapper = {
     async updateGame(gameDb, gameReq) {
         // update only concerns image at the moment
 
-        console.log(gameDb.picture);
-        console.log(gameReq.picture);
+        // console.log(gameDb.picture);
+        // console.log(gameReq.picture);
 
         // only update picture if it's not already set
         if (gameDb.picture === null && gameReq.picture !== undefined && gameReq.picture !== null) {
@@ -147,8 +147,8 @@ const toolsDataMapper = {
         };
         result = await pool.query(query);
 
-        console.log(result.rows[0]);
-        console.log(`${result.command} game`);
+        // console.log(result.rows[0]);
+        // console.log(`${result.command} game`);
         return result;
     }
 }
