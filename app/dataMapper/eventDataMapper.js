@@ -2,7 +2,7 @@ const pool = require('../database/dbClient');
 const toolsDataMapper = require('./toolsDataMapper')
 
 const eventDataMapper = {
-    async getEvents(userProfile, zoomFactor = 1){
+    async getEvents(userProfile, zoomFactor, limit) {
         const query = {
             text: `SELECT
                 "event"."id",
@@ -28,8 +28,9 @@ const eventDataMapper = {
                 "lat" <= $1::float + $2::float
                 AND "long" <= $3::float + $2::float
                 AND "lat" >= $1::float - $2::float
-                AND "long" >= $3::float - $2::float`,
-            values: [userProfile.geo.lat, (zoomFactor/10), userProfile.geo.long]
+                AND "long" >= $3::float - $2::float
+            LIMIT $4::int`,
+            values: [userProfile.geo.lat, (zoomFactor/10), userProfile.geo.long, limit]
         }
         const result = await pool.query(query);
         if(result.rowCount === 0){
@@ -60,32 +61,56 @@ const eventDataMapper = {
         return resultToReturn;
     },
     async getEventById(id){
-        const results = {
-            "rows": {
-                "event": {
-                    // "id": 100,
-                    "id": id,
-                    "name": "Event 100",
-                    "picture": 'http://www.spainisculture.com/export/sites/cultura/multimedia/galerias/fiestas/fiestas_sin_ficha/ajedrez2_javea_o_c.jpg_1306973099.jpg',
-                    "seats": 10,
-                    "description": "Je ne joue pas pour participer, je joue pour que vous sachiez que je suis le meilleur !",
-                    "start_date": "2022-05-04T18:00:00.000Z",
-                    "event_admin": {
-                        "id": 10,
-                        "username": "Chat10",
-                        "avatar": "https://cdn.pixabay.com/photo/2016/06/14/00/14/cat-1455468_960_720.jpg"
-                    },
-                    "geo": {
-                        "id": 17,
-                        "city": "Lattes",
-                        "postcode": 34970,
-                        "lat": 43.567,
-                        "long": 3.899
-                    }
-                }
+        const query = {
+            text: `SELECT
+                "event"."id",
+                "event"."name",
+                "event"."picture",
+                "event"."seats",
+                "event"."start_date",
+                "event"."description",
+                "event"."created_at",
+                "geo"."id" AS "geo_id",
+                "geo"."city" AS "city",
+                "geo"."postcode" AS "postcode",
+                "geo"."lat" AS "lat",
+                "geo"."long" AS "long",
+                "user"."id" AS "event_admin_id",
+                "user"."username" AS "event_admin_username",
+                "user"."avatar" AS "event_admin_avatar"
+            FROM
+                "event"
+            INNER JOIN "geo" ON ("event"."geo_id" = "geo"."id")
+            INNER JOIN "user" ON ("event"."event_admin" = "user"."id")
+            WHERE
+                "event"."id" = $1`,
+            values: [id]
+        };
+        const result = await pool.query(query);
+        if(result.rowCount === 0){
+            throw `Aucun événement ne correspond à la recherche !`;
+        }
+        const resultToReturn = {
+            id: result.rows[0].id,
+            name: result.rows[0].name,
+            picture: result.rows[0].picture,
+            seats: result.rows[0].seats,
+            start_date: result.rows[0].start_date,
+            description: result.rows[0].description,
+            event_admin: {
+                id: result.rows[0].event_admin_id,
+                username: result.rows[0].event_admin_username,
+                avatar: result.rows[0].event_admin_avatar
+            },
+            geo: {
+                id: result.rows[0].geo_id,
+                city: result.rows[0].city,
+                postcode: result.rows[0].postcode,
+                lat: result.rows[0].lat,
+                long: result.rows[0].long
             }
         }
-        return results.rows;
+        return resultToReturn;
     },
     async addEvent(event, userId){
         try {
