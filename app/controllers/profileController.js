@@ -29,9 +29,9 @@ const profileController = {
             // catch the id of the user inside the token
             const userId = Number(req.userToken.user.id);
             const result = await profileDataMapper.updateProfile(userId, req.body.user);
-            res.status(200).json({ user: result, accessToken: req.bearerToken });
+            res.status(200).json({ user: result, isUpdated: true, accessToken: req.bearerToken });
         } catch (error) {
-            res.status(403).json({ errorMessage: error });
+            res.status(403).json({ isUpdated: false, errorMessage: error });
         }
     },
     async addGame(req, res, next){
@@ -43,9 +43,9 @@ const profileController = {
             }
             const userId = Number(req.userToken.user.id);
             const result = await profileDataMapper.addGameToProfile(userId, req.body.user.game);
-            res.status(200).json({ user: result, accessToken: req.bearerToken });
+            res.status(200).json({ user: result, isAdded: true, accessToken: req.bearerToken });
         } catch (error) {
-            res.status(403).json({ errorMessage: error });
+            res.status(403).json({ isAdded: false, errorMessage: error });
         }
     },
     async deleteGame(req, res, next){
@@ -70,16 +70,16 @@ const profileController = {
             gameList = await profileDataMapper.getUserGamesList(userId);
 
             res.status(200).json({
-                "successMessage": result.successMessage,
-                "isDeleted": true,
-                "gameDeleted": result.gameId,
-                "user": {
+                successMessage: result.successMessage,
+                isDeleted: true,
+                gameDeleted: result.gameId,
+                user: {
                     game: gameList.rows,
                 },
                 accessToken: req.bearerToken
             });
         } catch (error) {
-            res.status(403).json({ "isDeleted": false, errorMessage: error , accessToken: req.bearerToken});
+            res.status(403).json({ isDeleted: false, errorMessage: error , accessToken: req.bearerToken});
         }
     }
 }

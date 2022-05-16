@@ -58,10 +58,10 @@ const eventController = {
             }
             const userToken = req.userToken;
             const result = await eventDataMapper.subscribeEventById(eventIdBody, userToken.user.id);
-            res.status(201).json({ events: result, accessToken: req.bearerToken });
+            res.status(201).json({ event: result, isSubscribed: true, successMessage: 'Vous êtes inscrit à cet événement !', accessToken: req.bearerToken });
         }
         catch (error) {
-            res.status(403).json({ errorMessage: error, accessToken: req.bearerToken });
+            res.status(403).json({ isSubscribed: false, errorMessage: error, accessToken: req.bearerToken });
         }
     },
     async unsubscribeEventById(req, res, next){
@@ -80,10 +80,10 @@ const eventController = {
             }
             const userToken = req.userToken;
             const result = await eventDataMapper.unsubscribeEventById(eventIdBody, userToken.user.id);
-            res.status(200).json({ events: result, accessToken: req.bearerToken });
+            res.status(200).json({ event: result, isUnsubscribed: true, successMessage: 'Vous êtes désinscrit de cet événement.',accessToken: req.bearerToken });
         }
         catch (error) {
-            res.status(403).json({ errorMessage: error, accessToken: req.bearerToken });
+            res.status(403).json({ errorMessage: error, isUnsubscribed: false, accessToken: req.bearerToken });
         }
     }
 }
