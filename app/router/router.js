@@ -18,7 +18,6 @@ router.post('/sign-in', userController.signIn);
 
 router.get('/dashboard', checkAccessToken, profileController.getDashboard);
 router.patch('/profile', checkAccessToken, profileController.updateProfile);
-// router.delete('/profile', checkAccessToken, profileController.deleteProfile);
 
 router.post('/profile/my-games', checkAccessToken, profileController.addGame);
 router.delete('/profile/my-games', checkAccessToken, profileController.deleteGame);
@@ -31,7 +30,6 @@ router.get('/events', checkAccessToken, eventController.getEvents);
 router.post('/events', checkAccessToken, eventController.addEvent);
 
 router.get('/events/:id', checkAccessToken, eventController.getEventById);
-// router.patch('/events/:id', checkAccessToken, eventController.updateEvent);
 router.post('/events/:id/subscribe', checkAccessToken, eventController.subscribeEventById);
 router.delete('/events/:id/subscribe', checkAccessToken, eventController.unsubscribeEventById);
 
