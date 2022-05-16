@@ -102,8 +102,8 @@ const profileDataMapper = {
                 "user"."username" AS "event_admin_username",
                 "user"."avatar" AS "event_admin_avatar"
             FROM
-                "user_joins_event"
-            INNER JOIN "event" ON ("event"."id" = "user_joins_event"."event_id")
+                "event"
+            LEFT JOIN "user_joins_event" ON ("event"."id" = "user_joins_event"."event_id")
             INNER JOIN "geo" ON ("event"."geo_id" = "geo"."id")
             INNER JOIN "user" ON ("event"."event_admin" = "user"."id")
             WHERE
@@ -145,6 +145,7 @@ const profileDataMapper = {
                     username: event.event_admin_username,
                     avatar: event.event_admin_avatar
                 },
+                user_joins_event: event.joins_id,
                 geo: {
                     id: event.geo_id,
                     city: event.city,
