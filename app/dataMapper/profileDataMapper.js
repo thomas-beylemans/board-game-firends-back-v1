@@ -173,65 +173,78 @@ const profileDataMapper = {
         };
         return responseToReturn;
     },
+    geoValuesValidation(geo) {
+        const geoKeys = Object.keys(geo);
+        const valuesMatchNull = [];
+        
+        geoKeys.forEach(key => {
+            const result = geo[key] === null ? true : false;
+            valuesMatchNull.push(result);
+        });
 
+        return valuesMatchNull.includes(true);
+    },
     async updateProfile(userId, userData) {
-        // does geo key is exist in userData AND contains changes?
-        if (userData.hasOwnProperty('geo') && Object.keys(userData.geo).length !== 0) {
-            let result = await toolsDataMapper.addCity(userData.geo);
-
-            const geo_id = result.rows[0].id || null;
-
-            // update geo_id profile
-            const query = {
-                text: `UPDATE "user"
+        try {
+            // Is user.geo exist AND contains changes?
+            if (userData.hasOwnProperty('geo') && Object.keys(userData.geo).length !== 0) {
+                // does includes null values;
+                if (this.geoValuesValidation(userData.geo)) throw 'Données géo incorrectes';
+                let result = await toolsDataMapper.addCity(userData.geo);
+                const geo_id = result.rows[0].id;
+                
+                // update geo_id profile
+                const query = {
+                    text: `UPDATE "user"
                     SET "geo_id" = $1
                     WHERE id = $2
                     RETURNING *`,
-                values: [geo_id, userId]
+                    values: [geo_id, userId]
+                }
+                await pool.query(query);
             }
+            
+            // Hashing Password
+            userData.password ? userData.password = await bcrypt.hash(userData.password, 10) : null;
 
-            result = await pool.query(query);
-            // console.log(result.rows[0]);
-        }
-        
-        // User data processing
-        userData.password ? userData.password = await bcrypt.hash(userData.password, 10) : null;
+            // Keep only relevant keys (no object like geo)
+            let userFields = Object.keys(userData).map((key) => {
+                // if (typeof userData[key] !== 'object') { // null is an object
+                if (key !== 'geo') return key
+            });
+            
+            userFields = userFields.filter(element => element !== undefined);
 
-        let userFields = Object.keys(userData).map((key, index) => {
-            // console.log(typeof userData[key]);
-            if (typeof userData[key] !== 'object') {
-                return `"${key}" = $${index + 1}`
-            }
-        });
+            userFields = userFields.map((key, index) => {
+                // if (typeof userData[key] !== 'object') { // null is an object
+                if (key !== 'geo') return `"${key}" = $${index + 1}`
+            });
 
-        userFields = userFields.filter(element => element !== undefined);
+            let userValues = Object.keys(userData).map((key, index) => {
+                if (key !== 'geo') return userData[key]
+            });
 
-        let userValues = Object.values(userData).map((value) => {
-            // console.log(typeof value);
-            if (typeof value !== 'object') {
-                return value;
-            }
-        });
+            userValues = userValues.filter(element => element !== undefined);
 
-        userValues = userValues.filter(element => element !== undefined);
-
-        // console.log(userFields);
-        // console.log(userValues);
-
-        if (userFields.length > 0) {
-            const query = {
-                text: `UPDATE "user"
+            if (userFields.length > 0) {
+                const query = {
+                    text: `UPDATE "user"
                     SET ${userFields}
                     WHERE id = $${userFields.length + 1}
                     RETURNING *`,
-                values: [...userValues, userId]
+                    values: [...userValues, userId]
+                }
+                // console.log(query);
+                const result = await pool.query(query);
+                // console.log(result.rows[0]);
             }
-            const result = await pool.query(query);
-            // console.log(result.rows[0]);
+            // Updates done, return user entity
+            const userUpdated = await profileDataMapper.getOneUser(userId);
+            return userUpdated;
+
+        } catch (error) {
+            throw error;
         }
-        // Updates done, return user entity
-        const userUpdated = await profileDataMapper.getOneUser(userId);
-        return userUpdated;
     },
 
     async addGameToProfile(userId, gameReq) {
@@ -255,8 +268,8 @@ const profileDataMapper = {
         result = await pool.query(query);
         // console.log(`${result.command} relation user:game`);
 
-        result = await this.getUserGamesList(userId); 
-        return {game: result.rows};
+        result = await this.getUserGamesList(userId);
+        return { game: result.rows };
     },
 
     async getUserGamesList(userId) {
