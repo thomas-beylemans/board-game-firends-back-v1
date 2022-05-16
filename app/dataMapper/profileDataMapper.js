@@ -87,7 +87,7 @@ const profileDataMapper = {
         };
         const queryEvent = {
             text: `SELECT
-                "event"."id" AS "id",
+                DISTINCT "event"."id" AS "id",
                 "event"."name" AS "name",
                 "event"."picture" AS "picture",
                 "event"."seats" AS "seats",
@@ -101,7 +101,6 @@ const profileDataMapper = {
                 "user"."id" AS "event_admin_id",
                 "user"."username" AS "event_admin_username",
                 "user"."avatar" AS "event_admin_avatar"
-
             FROM
                 "user_joins_event"
             INNER JOIN "event" ON ("event"."id" = "user_joins_event"."event_id")
