@@ -39,7 +39,7 @@ const toolsDataMapper = {
             return `$${index + 1}`
         });
         // console.log(valuesRef);
-        try {
+
             const query = {
                 text: `
                     INSERT INTO "geo" ( ${geoFields} )
@@ -53,11 +53,7 @@ const toolsDataMapper = {
             result = await pool.query(query);
             // console.log(result.rows[0]);
             return result || null
-        } catch (error) {
-            console.log(error);
-        }
     },
-
     async findGameById(gameId) {
         const query = {
             text: `

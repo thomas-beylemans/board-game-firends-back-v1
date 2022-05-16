@@ -29,16 +29,24 @@ const profileController = {
             // catch the id of the user inside the token
             const userId = Number(req.userToken.user.id);
             const result = await profileDataMapper.updateProfile(userId, req.body.user);
-            res.status(200).json({ user: result, accessToken: req.bearerToken });
+            res.status(200).json({
+                isUpdated : true,
+                user: result,
+                accessToken: req.bearerToken
+            });
         } catch (error) {
-            res.status(403).json({ errorMessage: error });
+            res.status(403).json(
+            {
+                errorMessage: error,
+                isUpdated: false
+            });
+
         }
     },
     async addGame(req, res, next){
         try {
              // check if req.body has game's data
              if (!req.body.user.hasOwnProperty('game') || Object.keys(req.body.user.game).length === 0) {
-                console.log('toto');
                 throw `Données jeu absents`;
             }
             const userId = Number(req.userToken.user.id);
