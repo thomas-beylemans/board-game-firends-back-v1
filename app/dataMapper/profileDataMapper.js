@@ -289,7 +289,8 @@ const profileDataMapper = {
             const result = await pool.query(query);
             if (result.rowCount === 0) throw new Error({ errorMessage: "Le jeu n'a pas été supprimé", isDeleted: false, gameId: gameId });
 
-            return { successMessage: "Le jeu a été supprimé", isDeleted: true, gameId: gameId };
+            const responseToReturn = { successMessage: "Le jeu a été supprimé", isDeleted: true, gameId: gameId };
+            return responseToReturn;
         } catch (error) {
             return { errorMessage: "Échec de la suppression du jeu.", isDeleted: false, gameId: gameId };
         }

@@ -51,32 +51,28 @@ const profileController = {
     async deleteGame(req, res, next){
         try {
             // is request valid?
-            const gameId = req.body.user.game.id;
+            const gameId = req.body.game.id;
             if (!gameId) throw "game data is missing";
 
             // user owns game?
             const userId = Number(req.userToken.user.id);
             let gameList = await profileDataMapper.getUserGamesList(userId);
-            // console.log(gameList.rows);
             
-            const userGameIdList = gameList.rows.map(game => game.id);
+            // const userGameIdList = gameList.rows.map(game => game.id);
             // console.log(userGameIdList);
 
             // if not found
-            if (!userGameIdList.includes(gameId)) throw "Game not found in your list"
-            
-            let gameToDelete = gameList.rows.find(game => game.id === gameId);
-            // console.log(gameToDelete);
+            if (!gameList.rows.filter(game => game.id === gameId)) throw "Game not found in your list"
             
             // if found, delete processing…
-            result = await profileDataMapper.deleteGameFromGamesList(userId, gameId);
-
+            const result = await profileDataMapper.deleteGameFromGamesList(userId, gameId);
             // request the new user game list
             gameList = await profileDataMapper.getUserGamesList(userId);
 
             res.status(200).json({
+                "successMessage": result.successMessage,
                 "isDeleted": true,
-                "gameDeleted": gameToDelete,
+                "gameDeleted": result.gameId,
                 "user": {
                     game: gameList.rows,
                 },
