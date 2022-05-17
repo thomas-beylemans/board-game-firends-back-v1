@@ -5,6 +5,7 @@ const userController = require('../controllers/userController');
 const profileController = require('../controllers/profileController');
 const eventController = require('../controllers/eventController');
 const { checkAccessToken } = require('../middlewares/securityMiddleware');
+const upload = require('../middlewares/uploadPicture');
 
 /**
  * @route POST /api/v1
@@ -17,7 +18,7 @@ router.post('/sign-in', userController.signIn);
 // TODO: add a sign out route
 
 router.get('/dashboard', checkAccessToken, profileController.getDashboard);
-router.patch('/profile', checkAccessToken, profileController.updateProfile);
+router.patch('/profile', checkAccessToken, upload.single('picture'), profileController.updateProfile);
 
 router.post('/profile/my-games', checkAccessToken, profileController.addGame);
 router.delete('/profile/my-games', checkAccessToken, profileController.deleteGame);
