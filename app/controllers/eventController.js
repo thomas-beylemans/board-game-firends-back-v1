@@ -109,7 +109,7 @@ const eventController = {
             const result = await eventDataMapper.unsubscribeEventById(eventIdBody, userToken.user.id);
             res.status(200).json({
                 event: result,
-                isUnsubscribed: true,
+                isSubscribed: false,
                 successMessage: 'Vous êtes désinscrit de cet événement.',
                 accessToken: req.bearerToken
             });
@@ -117,7 +117,7 @@ const eventController = {
         catch (error) {
             res.status(403).json({
                 errorMessage: error,
-                isUnsubscribed: false,
+                isSubscribed: true,
                 accessToken: req.bearerToken
             });
         }

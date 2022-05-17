@@ -152,11 +152,11 @@ const eventDataMapper = {
             }
             const result = await pool.query(queryUnsubscribeEvent);
             if (result.rowCount !== 0) {
-                return { successMessage: "Vous êtes désinscrit de cet événement.", isUnsubscribed: true, eventId: eventId };
+                return { successMessage: "Vous êtes désinscrit de cet événement." };
             }
-            throw new Error({ errorMessage: "Vous n'êtes pas inscrit à cet événement.", isUnsubscribed: false, eventId: eventId } );
+            throw new Error({ errorMessage: "Vous n'êtes pas inscrit à cet événement." } );
         } catch (error) {
-            return { errorMessage: "Échec de la désinscription à l'événement.", isUnsubscribed: false };
+            return { errorMessage: "Échec de la désinscription à l'événement." };
         }
     }
 }
