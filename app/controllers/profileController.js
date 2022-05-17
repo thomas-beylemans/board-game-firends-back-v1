@@ -1,4 +1,5 @@
 const profileDataMapper = require('../dataMapper/profileDataMapper');
+const cloudinaryPersonalMethods = require('../middlewares/cloudinary');
 
 const profileController = {
     async getProfileById(req, res, next) {
@@ -22,6 +23,15 @@ const profileController = {
     },
     async updateProfile(req, res, next) {
         try {
+            // check if there is a file in the request, if yes, upload it and create the avatar field on the req.body.user
+            if (req.globalFileName) {
+                const avatarLink = await cloudinaryPersonalMethods.uploadPicture(req.globalFileName);
+                req.body = {
+                    user: {
+                        avatar: avatarLink
+                    }
+                }
+            }
             // check if req.body has user's data
             if (!req.body.hasOwnProperty('user') || Object.keys(req.body.user).length === 0) {
                 throw `Données utilisateurs absentes`;
