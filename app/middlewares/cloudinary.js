@@ -1,5 +1,6 @@
 const cloudinary = require('cloudinary').v2;
 const fs = require('fs');
+const uuid = require('uuid');
 
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_NAME,
@@ -15,23 +16,17 @@ const cloudinaryPersonalMethods = {
         //     public_id: '306452',
         //     overwrite: false
         // console.log(picture);
-        await fs.writeFile(__dirname + './test.jpg', picture, 'base64', (err) => {
-            if (err) {
-                console.log(err);
-            }
-        }
-        );
-        await cloudinary.uploader.upload(picture, {
+        
+        const result = await cloudinary.uploader.upload(__dirname + '/../../.uploads/'+picture, {
             folder: 'images',
-            public_id: 'test',
+            public_id: uuid.v1(),
             overwrite: true
         }, (err, result) => {
-            console.log(err, result);
             if (err) {
                 throw err;
             }
-            return result.secure_url;
         });
+        return result.secure_url;
     }
 };
 
