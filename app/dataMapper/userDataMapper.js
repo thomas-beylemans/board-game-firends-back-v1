@@ -9,16 +9,17 @@ const userDataMapper = {
             const infoCity = await toolsDataMapper.addCity(userToAdd.geo);
             const queryUser = {
                 text: `INSERT INTO "user" (
-                    "email", "password", "username", "bio", "geo_id"
+                    "email", "password", "username", "bio", "geo_id", "avatar"
                     )
-                    VALUES ($1, $2, $3, $4, $5)
-                    RETURNING "id", "email", "username", "geo_id"`,
+                    VALUES ($1, $2, $3, $4, $5, $6)
+                    RETURNING "id", "email", "username", "bio", "avatar", "geo_id"`,
                 values: [
                     userToAdd.email,
                     hashedPassword,
                     userToAdd.username,
                     userToAdd.bio,
-                    infoCity.rows[0].id
+                    infoCity.rows[0].id,
+                    userToAdd.avatar
                 ]
             };
             const results = await pool.query(queryUser);
