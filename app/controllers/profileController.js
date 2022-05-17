@@ -24,7 +24,7 @@ const profileController = {
         try {
             // check if req.body has user's data
             if (!req.body.hasOwnProperty('user') || Object.keys(req.body.user).length === 0) {
-                throw `Données utilisateurs absents`;
+                throw `Données utilisateurs absentes`;
             }
             // catch the id of the user inside the token
             const userId = Number(req.userToken.user.id);

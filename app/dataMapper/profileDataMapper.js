@@ -222,7 +222,11 @@ const profileDataMapper = {
             });
 
             let userValues = Object.keys(userData).map((key, index) => {
-                if (key !== 'geo') return userData[key]
+                if (key === 'avatar' && (userData[key] === '' || userData[key] === null)) {
+                    return `https://res.cloudinary.com/board-game-friends/image/upload/v1652777587/images/default_profile_picture.jpg`;
+                } else if (key !== 'geo') {
+                    return userData[key]
+                }
             });
 
             userValues = userValues.filter(element => element !== undefined);
