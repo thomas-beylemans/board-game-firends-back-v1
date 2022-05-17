@@ -18,7 +18,7 @@ const securityMiddleware = {
         // trying to decode it
         jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
             if (err) {
-                return res.status(401).json({ errorMessage: 'Accès interdit, il faut être indentifié !' });
+                return res.status(401).json({ errorMessage: 'Accès interdit, il faut être identifié !' });
             }
             req.userToken = user;
             next();

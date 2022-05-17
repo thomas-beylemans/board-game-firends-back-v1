@@ -61,7 +61,7 @@ const eventDataMapper = {
         return resultToReturn;
     },
     async getEventById(id){
-        const query = {
+        const queryEvent = {
             text: `SELECT
                 "event"."id",
                 "event"."name",
@@ -86,29 +86,45 @@ const eventDataMapper = {
                 "event"."id" = $1`,
             values: [id]
         };
-        const result = await pool.query(query);
-        if(result.rowCount === 0){
+        const resultEvent = await pool.query(queryEvent);
+        if(resultEvent.rowCount === 0){
             throw `Aucun événement ne correspond à la recherche !`;
         }
+        const queryUserJoins = {
+            text: `SELECT
+                "user"."id" AS "id",
+                "user"."username" AS "username",
+                "user"."avatar" AS "avatar"
+            FROM
+                "event"
+            INNER JOIN "user_joins_event" ON ("user_joins_event"."event_id" = "event"."id")
+            INNER JOIN "user" ON ("user_joins_event"."user_id" = "user"."id")
+            WHERE
+                "event"."id" = $1`,
+            values: [id]
+        };
+        const resultUserJoins = await pool.query(queryUserJoins);
+
         const resultToReturn = {
-            id: result.rows[0].id,
-            name: result.rows[0].name,
-            picture: result.rows[0].picture,
-            seats: result.rows[0].seats,
-            start_date: result.rows[0].start_date,
-            description: result.rows[0].description,
+            id: resultEvent.rows[0].id,
+            name: resultEvent.rows[0].name,
+            picture: resultEvent.rows[0].picture,
+            seats: resultEvent.rows[0].seats,
+            start_date: resultEvent.rows[0].start_date,
+            description: resultEvent.rows[0].description,
             event_admin: {
-                id: result.rows[0].event_admin_id,
-                username: result.rows[0].event_admin_username,
-                avatar: result.rows[0].event_admin_avatar
+                id: resultEvent.rows[0].event_admin_id,
+                username: resultEvent.rows[0].event_admin_username,
+                avatar: resultEvent.rows[0].event_admin_avatar
             },
             geo: {
-                id: result.rows[0].geo_id,
-                city: result.rows[0].city,
-                postcode: result.rows[0].postcode,
-                lat: result.rows[0].lat,
-                long: result.rows[0].long
-            }
+                id: resultEvent.rows[0].geo_id,
+                city: resultEvent.rows[0].city,
+                postcode: resultEvent.rows[0].postcode,
+                lat: resultEvent.rows[0].lat,
+                long: resultEvent.rows[0].long
+            },
+            event_player: resultUserJoins.rows
         }
         return resultToReturn;
     },
