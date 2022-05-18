@@ -7,6 +7,9 @@ const userDataMapper = {
         try {
             const hashedPassword = await bcrypt.hash(userToAdd.password, 10);
             const infoCity = await toolsDataMapper.addCity(userToAdd.geo);
+            if (userToAdd.bio === null || userToAdd.bio === undefined) {
+                userToAdd.bio = '';
+            }
             const queryUser = {
                 text: `INSERT INTO "user" (
                     "email", "password", "username", "bio", "geo_id", "avatar"
