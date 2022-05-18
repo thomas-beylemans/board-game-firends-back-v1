@@ -11,17 +11,18 @@ cloudinary.config({
 
 const cloudinaryPersonalMethods = {
     uploadPicture: async function(picture) {
-        // await cloudinary.uploader.upload(__dirname + '/../../ressources/306452.jpg', {
-        //     folder: 'images',
-        //     public_id: '306452',
-        //     overwrite: false
-        // console.log(picture);
-        
-        const result = await cloudinary.uploader.upload(__dirname + '/../../.uploads/'+picture, {
+        const imgTempLocation = __dirname + '/../../.uploads/'+picture;
+        const result = await cloudinary.uploader.upload(imgTempLocation, {
             folder: 'images',
             public_id: uuid.v1(),
             overwrite: true
         }, (err, result) => {
+            // delete the local file
+            fs.unlink(imgTempLocation, function (err) {
+                if (err) throw err;
+            });
+
+            // handle cloudinary error
             if (err) {
                 throw err;
             }
