@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS "user" (
     "password" text NOT NULL,
     "username" text UNIQUE NOT NULL,
     "avatar" text,
+    "avatar_publicid" text,
     "bio" text,
     "geo_id" int NOT NULL REFERENCES "geo"("id"),
     "created_at" timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,

@@ -23,12 +23,20 @@ const profileController = {
     },
     async updateProfile(req, res, next) {
         try {
+            // catch the id of the user inside the token
+            const userId = Number(req.userToken.user.id);
+            
             // check if there is a file in the request, if yes, upload it and create the avatar field on the req.body.user
             if (req.globalFileName) {
-                const avatarLink = await cloudinaryPersonalMethods.uploadPicture(req.globalFileName);
+                const userData = await profileDataMapper.getOneUser(userId);
+                if (userData.avatar_publicid !== null) {
+                    await cloudinaryPersonalMethods.deletePicture(userData.avatar_publicid);
+                }
+                const result = await cloudinaryPersonalMethods.uploadPicture(req.globalFileName);
                 req.body = {
                     user: {
-                        avatar: avatarLink
+                        avatar: result.secure_url,
+                        avatar_publicid: result.public_id
                     }
                 }
             }
@@ -36,8 +44,6 @@ const profileController = {
             if (!req.body.hasOwnProperty('user') || Object.keys(req.body.user).length === 0) {
                 throw `Données utilisateurs absentes`;
             }
-            // catch the id of the user inside the token
-            const userId = Number(req.userToken.user.id);
             const result = await profileDataMapper.updateProfile(userId, req.body.user);
             res.status(200).json({
                 isUpdated : true,

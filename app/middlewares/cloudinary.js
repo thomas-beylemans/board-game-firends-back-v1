@@ -27,8 +27,16 @@ const cloudinaryPersonalMethods = {
                 throw err;
             }
         });
-        return result.secure_url;
-    }
+        return result;
+    },
+    async deletePicture (imgCloudinaryPublicid){
+        // console.log(imgCloudinaryPublicid)
+        const result = await cloudinary.uploader.destroy(imgCloudinaryPublicid,
+            function(result) { 
+                console.log(result)
+            });
+        return result;
+    },
 };
 
 module.exports = cloudinaryPersonalMethods;

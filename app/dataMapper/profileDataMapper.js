@@ -12,6 +12,7 @@ const profileDataMapper = {
                 "user"."email",
                 "user"."username",
                 "user"."avatar",
+                "user"."avatar_publicid",
                 "user"."bio",
                 "geo"."id" AS "geo_id",
                 "geo"."city",
@@ -52,6 +53,7 @@ const profileDataMapper = {
             "email": resultUser.rows[0].email,
             "username": resultUser.rows[0].username,
             "avatar": resultUser.rows[0].avatar,
+            "avatar_publicid": resultUser.rows[0].avatar_publicid,
             "bio": resultUser.rows[0].bio,
             "geo": {
                 "id": resultUser.rows[0].geo_id,
