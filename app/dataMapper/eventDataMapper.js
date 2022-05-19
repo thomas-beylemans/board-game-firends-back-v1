@@ -110,6 +110,7 @@ const eventDataMapper = {
             name: resultEvent.rows[0].name,
             picture: resultEvent.rows[0].picture,
             seats: resultEvent.rows[0].seats,
+            seats_available: resultEvent.rows[0].seats - resultUserJoins.rows.length,
             start_date: resultEvent.rows[0].start_date,
             description: resultEvent.rows[0].description,
             event_admin: {
