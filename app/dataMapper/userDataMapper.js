@@ -5,7 +5,7 @@ const bcrypt = require("bcrypt");
 const userDataMapper = {
     async addOneUser(userToAdd) {
         try {
-            const hashedPassword = await bcrypt.hash(userToAdd.password, 10);
+            const hashedPassword = await bcrypt.hash(userToAdd.password, await bcrypt.genSalt(10));
             const infoCity = await toolsDataMapper.addCity(userToAdd.geo);
             if (userToAdd.bio === null || userToAdd.bio === undefined) {
                 userToAdd.bio = '';
