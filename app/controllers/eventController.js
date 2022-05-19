@@ -61,19 +61,19 @@ const eventController = {
     },
     async subscribeEventById(req, res, next){
         try {
-            let eventIdParams, eventIdBody;
-            try {
-                eventIdParams = Number(req.params.id);
-                eventIdBody = Number(req.body.event.id);
-                // we check if the eventId in the params is the same than the one in the body
-                if (eventIdParams !== eventIdBody) {
-                    throw Error;
-                }
-            } catch (error) {
-                return res.status(400).json({ errorMessage: 'Les deux identifiants ne correspondent pas.', accessToken: req.bearerToken });
+            let eventIdParams, eventIdBody;            
+            eventIdParams = Number(req.params.id);
+            eventIdBody = Number(req.body.event.id);
+            // we check if the eventId in the params is the same than the one in the body
+            if (eventIdParams !== eventIdBody) {
+                throw 'Les deux identifiants ne correspondent pas.';
             }
-            const userToken = req.userToken;
-            const result = await eventDataMapper.subscribeEventById(eventIdBody, userToken.user.id);
+            const { user } = req.userToken;
+            const result_event = await eventDataMapper.getEventById(eventIdBody);
+            if(Number(result_event.seats_available) <= 0) {
+                throw `Il n'y a plus de places disponibles pour cet événement.`;
+            }
+            const result = await eventDataMapper.subscribeEventById(eventIdBody, user.id);
             res.status(201).json({
                 event: result,
                 isSubscribed: true,
