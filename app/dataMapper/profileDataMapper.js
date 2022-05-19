@@ -12,7 +12,6 @@ const profileDataMapper = {
                 "user"."email",
                 "user"."username",
                 "user"."avatar",
-                "user"."avatar_publicid",
                 "user"."bio",
                 "geo"."id" AS "geo_id",
                 "geo"."city",
@@ -53,7 +52,6 @@ const profileDataMapper = {
             "email": resultUser.rows[0].email,
             "username": resultUser.rows[0].username,
             "avatar": resultUser.rows[0].avatar,
-            "avatar_publicid": resultUser.rows[0].avatar_publicid,
             "bio": resultUser.rows[0].bio,
             "geo": {
                 "id": resultUser.rows[0].geo_id,
@@ -241,9 +239,7 @@ const profileDataMapper = {
                     RETURNING *`,
                     values: [...userValues, userId]
                 }
-                // console.log(query);
                 const result = await pool.query(query);
-                // console.log(result.rows[0]);
             }
             // Updates done, return user entity
             const userUpdated = await profileDataMapper.getOneUser(userId);
@@ -261,7 +257,6 @@ const profileDataMapper = {
 
         // Get BG id added or found
         const gameId = result.rows[0].id;
-        // console.log(gameId);
 
         // Add => Ajout/INSERT INTO à la table de liaison user_owns_game
         const query = {
@@ -273,7 +268,6 @@ const profileDataMapper = {
         }
 
         result = await pool.query(query);
-        // console.log(`${result.command} relation user:game`);
 
         result = await this.getUserGamesList(userId);
         return { game: result.rows };
@@ -293,7 +287,6 @@ const profileDataMapper = {
             values: [userId]
         };
         const result = await pool.query(query);
-        // console.log(result.rows);
         return result;
     },
 

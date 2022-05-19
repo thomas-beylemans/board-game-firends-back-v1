@@ -29,16 +29,24 @@ const profileController = {
             // check if there is a file in the request, if yes, upload it and create the avatar field on the req.body.user
             if (req.globalFileName) {
                 const userData = await profileDataMapper.getOneUser(userId);
-                if (userData.avatar_publicid !== null) {
-                    await cloudinaryPersonalMethods.deletePicture(userData.avatar_publicid);
+                
+                let public_id = '';
+                if (userData.avatar !== null) {
+                    // scrap public_id from secure_url value
+                    const regex = /images\/.+(?=\.)/gim
+                    // secure_url example : "https://res.cloudinary.com/board-game-friends/image/upload/v1652883691/images/d04d1520-d6b5-11ec-b34a-c9bb2a0fec80.png";
+                    public_id = userData.avatar.match(regex)[0];
                 }
-                const result = await cloudinaryPersonalMethods.uploadPicture(req.globalFileName);
-                req.body = {
-                    user: {
-                        avatar: result.secure_url,
-                        avatar_publicid: result.public_id
-                    }
+                
+                // upload new image on Cloudinary
+                let result = await cloudinaryPersonalMethods.uploadPicture(req.globalFileName);
+                
+                // delete Cloudinary image if exist in the database
+                if (userData.avatar !== null || result !== null) {
+                    await cloudinaryPersonalMethods.deletePicture(public_id);
                 }
+
+                req.body = { user: { avatar: result.secure_url } };
             }
             // check if req.body has user's data
             if (!req.body.hasOwnProperty('user') || Object.keys(req.body.user).length === 0) {
@@ -83,9 +91,6 @@ const profileController = {
             const userId = Number(req.userToken.user.id);
             let gameList = await profileDataMapper.getUserGamesList(userId);
             
-            // const userGameIdList = gameList.rows.map(game => game.id);
-            // console.log(userGameIdList);
-
             // if not found
             if (!gameList.rows.filter(game => game.id === gameId)) throw "Game not found in your list"
             

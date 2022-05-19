@@ -132,13 +132,11 @@ const eventDataMapper = {
     async addEvent(event, userId){
         try {
             const infoCity = await toolsDataMapper.addCity(event.geo);
-            // console.log(infoCity);
             const queryAddEvent = {
                 text: `INSERT INTO event ("name", "picture", "seats", "description", "start_date", "event_admin", "geo_id") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"`,
                 values: [event.name, event.picture, event.seats, event.description, event.start_date, userId, infoCity.rows[0].id]
             }
             const result = await pool.query(queryAddEvent);
-            console.log(result.rows[0]);
             if (result.rowCount !== 0) {
                 return { 
                     eventCreated: true,

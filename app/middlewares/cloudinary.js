@@ -30,12 +30,12 @@ const cloudinaryPersonalMethods = {
         return result;
     },
     async deletePicture (imgCloudinaryPublicid){
-        // console.log(imgCloudinaryPublicid)
-        const result = await cloudinary.uploader.destroy(imgCloudinaryPublicid,
-            function(result) { 
-                console.log(result)
-            });
-        return result;
+        try {
+            const result = await cloudinary.uploader.destroy(imgCloudinaryPublicid);
+            return result;
+        } catch (error) {
+            throw error
+        }
     },
 };
 

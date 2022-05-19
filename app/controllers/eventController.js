@@ -19,7 +19,6 @@ const eventController = {
             res.status(200).json(responseToReturn);
         }
         catch (error) {
-            console.log(error);
             res.status(404).json({
                 errorMessage: error,
                 accessToken: req.bearerToken
