@@ -50,11 +50,18 @@ const eventDataMapper = {
         WHERE
             "event"."id" IN (${eventsId})`);
         const resultToReturn = result.rows.map(event => {
+            const eventPlayers = resultUserJoins.rows
+                .filter(user => user.event_id === event.id)
+                .map(user => {
+                    delete user.event_id;
+                    return user;
+                });
             return {
                 id: event.id,
                 name: event.name,
                 picture: event.picture,
                 seats: event.seats,
+                seats_available: event.seats - eventPlayers.length,
                 start_date: event.start_date,
                 description: event.description,
                 event_admin: {
@@ -69,12 +76,7 @@ const eventDataMapper = {
                     lat: event.lat,
                     long: event.long
                 },
-                event_player: resultUserJoins.rows
-                    .filter(user => user.event_id === event.id)
-                    .map(user => {
-                        delete user.event_id;
-                        return user;
-                    })
+                event_player: eventPlayers
             }
         });
         return resultToReturn;
