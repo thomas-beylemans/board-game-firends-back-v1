@@ -36,6 +36,19 @@ const eventDataMapper = {
         if(result.rowCount === 0){
             return [];
         }
+        // prepare event values for the user_joins_event query
+        const eventsId = result.rows.map(event => Number(event.id)).join(',');
+        const resultUserJoins = await pool.query(`SELECT
+            DISTINCT "event"."id" AS "event_id",
+            "user"."id" AS "id",
+            "user"."username" AS "username",
+            "user"."avatar" AS "avatar"
+        FROM
+            "event"
+        INNER JOIN "user_joins_event" ON ("user_joins_event"."event_id" = "event"."id")
+        INNER JOIN "user" ON ("user_joins_event"."user_id" = "user"."id")
+        WHERE
+            "event"."id" IN (${eventsId})`);
         const resultToReturn = result.rows.map(event => {
             return {
                 id: event.id,
@@ -55,7 +68,13 @@ const eventDataMapper = {
                     postcode: event.postcode,
                     lat: event.lat,
                     long: event.long
-                }
+                },
+                event_player: resultUserJoins.rows
+                    .filter(user => user.event_id === event.id)
+                    .map(user => {
+                        delete user.event_id;
+                        return user;
+                    })
             }
         });
         return resultToReturn;
