@@ -206,7 +206,11 @@ const profileDataMapper = {
             }
             
             // Hashing Password
-            userData.password ? userData.password = await bcrypt.hash(userData.password, 10) : null;
+            if (userData.password === null || userData.password === '') {
+                delete userData.password;
+            } else {
+                userData.password ? userData.password = await bcrypt.hash(userData.password, 10) : null;
+            }
 
             // Keep only relevant keys (no object like geo)
             let userFields = Object.keys(userData).map((key) => {
