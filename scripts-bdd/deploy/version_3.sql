@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS "event" (
     "seats" int NOT NULL,
     "start_date" timestamptz NOT NULL,
     "description" text NOT NULL,
-    "event_admin" int NOT NULL REFERENCES "user"("id"),
+    "event_admin" int NOT NULL REFERENCES "user"("id") ON DELETE CASCADE,
     "geo_id" int NOT NULL REFERENCES "geo"("id"),
     "created_at" timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP
