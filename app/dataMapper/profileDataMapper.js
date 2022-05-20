@@ -132,12 +132,37 @@ const profileDataMapper = {
                 errorMessage: `L'utilisateur n'a pas été trouvé...`
             };
         }
+
+        let resultUserJoins = [];
+        if(resultEvent.rows.length !== 0) {
+            const eventsId = resultEvent.rows
+                .map(event => Number(event.id))
+                .join(',');
+            resultUserJoins = await pool.query(`SELECT
+                DISTINCT "user_joins_event"."event_id" AS "event_id",
+                "user"."id" AS "id",
+                "user"."username" AS "username",
+                "user"."avatar" AS "avatar"
+            FROM
+                "user_joins_event"
+            INNER JOIN "user" ON ("user_joins_event"."user_id" = "user"."id")
+            WHERE
+                "user_joins_event"."event_id" IN (${eventsId})`);
+        }
+
         const events = resultEvent.rows.map(event => {
+            const eventPlayers = resultUserJoins.rows
+                .filter(user => user.event_id === event.id)
+                .map(user => {
+                    delete user.event_id;
+                    return user;
+                });
             return {
                 id: event.id,
                 name: event.name,
                 picture: event.picture,
                 seats: event.seats,
+                seats_available: event.seats - eventPlayers.length,
                 start_date: event.start_date,
                 description: event.description,
                 event_admin: {
@@ -152,7 +177,8 @@ const profileDataMapper = {
                     postcode: event.postcode,
                     lat: event.lat,
                     long: event.long
-                }
+                },
+                event_player: eventPlayers
             }
         });
 
