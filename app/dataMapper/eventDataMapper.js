@@ -29,6 +29,7 @@ const eventDataMapper = {
                 AND "long" <= $3::float + $2::float
                 AND "lat" >= $1::float - $2::float
                 AND "long" >= $3::float - $2::float
+            ORDER BY "event"."start_date" ASC
             LIMIT $4::int`,
             values: [userProfile.geo.lat, (zoomFactor/10), userProfile.geo.long, limit]
         }
