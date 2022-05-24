@@ -107,7 +107,8 @@ const profileDataMapper = {
             INNER JOIN "geo" ON ("event"."geo_id" = "geo"."id")
             INNER JOIN "user" ON ("event"."event_admin" = "user"."id")
             WHERE
-                "user_joins_event"."user_id" = $1 OR "event"."event_admin" = $1`,
+                "user_joins_event"."user_id" = $1 OR "event"."event_admin" = $1
+            ORDER BY "event"."start_date" ASC`,
             values: [userId]
         };
         const queryGame = {
