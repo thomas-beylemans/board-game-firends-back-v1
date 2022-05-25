@@ -168,7 +168,7 @@ const eventDataMapper = {
             }
         } catch (error) {
             return {
-                eventCreated: true,
+                eventCreated: false,
                 errorMessage: "Ajout de l'événement impossible.",
                 errorDetails: error
             };
